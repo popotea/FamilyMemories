@@ -1,0 +1,57 @@
+@page "{id:int?}"
+@model EditModel
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit Memory</h1>
+
+<h4>Memory</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Memory.Id" />
+            <div class="form-group">
+                <label asp-for="Memory.Title" class="control-label"></label>
+                <input asp-for="Memory.Title" class="form-control" />
+                <span asp-validation-for="Memory.Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Memory.Description" class="control-label"></label>
+                <textarea asp-for="Memory.Description" class="form-control"></textarea>
+                <span asp-validation-for="Memory.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Memory.Date" class="control-label"></label>
+                <input asp-for="Memory.Date" class="form-control" type="date" />
+                <span asp-validation-for="Memory.Date" class="text-danger"></span>
+            </div>
+            @if (!string.IsNullOrEmpty(Model.Memory.ImagePath))
+            {
+                <div class="form-group">
+                    <label>Current Image:</label>
+                    <div>
+                        <img src="~/uploads/@Model.Memory.ImagePath" alt="Current image" style="max-width: 200px; max-height: 200px;" />
+                    </div>
+                </div>
+            }
+            <div class="form-group">
+                <label asp-for="Upload" class="control-label">Upload New Image (leave empty to keep current)</label>
+                <input asp-for="Upload" class="form-control" type="file" accept="image/*" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save Changes" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

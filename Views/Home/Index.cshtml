@@ -1,0 +1,244 @@
+@{
+    ViewData["Title"] = "當我們彤再一起";
+    Layout = null; 
+}
+
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link rel="stylesheet" href="~/css/gallery.css" asp-append-version="true" />
+</head>
+<body>
+    <!-- 新增回憶按鈕 (只有登入用戶才顯示) -->
+    @if (User.Identity.IsAuthenticated)
+    {
+        <a asp-page="Memories/Create" class="add-memory-btn" title="新增回憶">
+            <svg class="icon-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+            </svg>
+        </a>
+    }
+
+
+
+    <!-- 頂部標題欄 -->
+    <div class="header">
+        <h1>@Model.WelcomeMessage</h1>
+        <div class="filter-container" id="filterContainer">
+            <!-- 篩選按鈕將由 JS 動態生成 -->
+        </div>
+    </div>
+
+    <!-- 相片網格 -->
+    <div class="gallery-container">
+        <div class="gallery-grid" id="galleryGrid">
+            <!-- 相片卡片將由 JS 動態生成 -->
+        </div>
+        <div class="empty-state" id="emptyState" style="display: none;">
+            沒有找到相關回憶
+        </div>
+    </div>
+
+    <!-- Modal 全螢幕檢視 -->
+    <div class="modal" id="photoModal">
+        <button class="modal-btn modal-close" id="modalClose">
+            <svg class="icon-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+        </button>
+        <button class="modal-btn modal-prev" id="modalPrev">
+            <svg class="icon-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+        </button>
+        <button class="modal-btn modal-next" id="modalNext">
+            <svg class="icon-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+        </button>
+
+        <div class="modal-content">
+            <div class="modal-image-container">
+                <img class="modal-image" id="modalImage" src="" alt="">
+            </div>
+            <div class="modal-info">
+                <div class="modal-member-tag">
+                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                    </svg>
+                    <span id="modalMember"></span>
+                </div>
+                <div class="modal-date">
+                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                    <span id="modalDate"></span>
+                </div>
+                <h2 class="modal-title" id="modalTitle"></h2>
+                <p class="modal-description" id="modalDescription"></p>
+                <div class="modal-footer">
+                    <span id="modalCounter"></span>
+                    <svg class="icon-lg heart-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            const photos = @Html.Raw(Json.Serialize(Model.Photos));
+            const isAuthenticated = @User.Identity.IsAuthenticated.ToString().ToLower();
+
+            let currentFilter = 'all';
+            let currentPhotoIndex = 0;
+            let filteredPhotos = photos;
+
+            // 取得所有成員
+            const members = ['all', ...new Set(photos.map(p => p.member))];
+
+            // 初始化篩選器
+            function initFilters() {
+                const filterContainer = $('#filterContainer');
+                filterContainer.empty();
+
+                members.forEach(member => {
+                    const btn = $('<button>')
+                        .addClass('filter-btn')
+                        .text(member === 'all' ? '全部' : member)
+                        .data('member', member)
+                        .on('click', function() {
+                            currentFilter = $(this).data('member');
+                            $('.filter-btn').removeClass('active');
+                            $(this).addClass('active');
+                            renderGallery();
+                        });
+
+                    if (member === 'all') {
+                        btn.addClass('active');
+                    }
+
+                    filterContainer.append(btn);
+                });
+            }
+
+            // 渲染相片網格
+            function renderGallery() {
+                filteredPhotos = currentFilter === 'all'
+                    ? photos
+                    : photos.filter(p => p.member === currentFilter);
+
+                const gallery = $('#galleryGrid');
+                gallery.empty();
+
+                if (filteredPhotos.length === 0) {
+                    $('#emptyState').show();
+                    return;
+                }
+
+                $('#emptyState').hide();
+
+                filteredPhotos.forEach((photo, index) => {
+                    let cardHtml = `
+                        <div class="photo-card" data-index="${index}">
+                            <img src="${photo.imageUrl}" alt="${photo.title}">
+                            <div class="photo-overlay"></div>
+                            <div class="photo-info">
+                                <div class="photo-tags">
+                                    <span class="photo-member">${photo.member}</span>
+                                    <span class="photo-date">${photo.date}</span>
+                                </div>
+                                <h3 class="photo-title">${photo.title}</h3>
+                                <p class="photo-description">${photo.description}</p>
+                            </div>
+                        </div>
+                    `;
+
+                    if (isAuthenticated) {
+                        cardHtml = `<a href="/Memories/Edit?id=${photo.id}">${cardHtml}</a>`;
+                    }
+
+                    const card = $(cardHtml);
+
+                    card.on('click', function(e) {
+                        if (!isAuthenticated) { // Only open modal if not authenticated
+                            openModal($(this).data('index'));
+                        } else if (e.target.tagName !== 'A' && $(e.target).closest('a').length === 0) { // Prevent modal if clicking on the edit link
+                            openModal($(this).data('index'));
+                        }
+                    });
+
+                    gallery.append(card);
+                });
+            }
+
+            // 開啟 Modal
+            function openModal(index) {
+                currentPhotoIndex = index;
+                updateModal();
+                $('#photoModal').addClass('active');
+                $('body').css('overflow', 'hidden');
+            }
+
+            // 關閉 Modal
+            function closeModal() {
+                $('#photoModal').removeClass('active');
+                $('body').css('overflow', 'auto');
+            }
+
+            // 更新 Modal 內容
+            function updateModal() {
+                const photo = filteredPhotos[currentPhotoIndex];
+                $('#modalImage').attr('src', photo.imageUrl).attr('alt', photo.title);
+                $('#modalMember').text(photo.member);
+                $('#modalDate').text(photo.date);
+                $('#modalTitle').text(photo.title);
+                $('#modalDescription').text(photo.description);
+                $('#modalCounter').text(`#${currentPhotoIndex + 1} / ${filteredPhotos.length}`);
+            }
+
+            // 上一張
+            function prevPhoto() {
+                currentPhotoIndex = (currentPhotoIndex - 1 + filteredPhotos.length) % filteredPhotos.length;
+                updateModal();
+            }
+
+            // 下一張
+            function nextPhoto() {
+                currentPhotoIndex = (currentPhotoIndex + 1) % filteredPhotos.length;
+                updateModal();
+            }
+
+            // 事件綁定
+            $('#modalClose').on('click', closeModal);
+            $('#modalPrev').on('click', prevPhoto);
+            $('#modalNext').on('click', nextPhoto);
+
+            // 鍵盤事件
+            $(document).on('keydown', function(e) {
+                if ($('#photoModal').hasClass('active')) {
+                    if (e.key === 'Escape') closeModal();
+                    if (e.key === 'ArrowLeft') prevPhoto();
+                    if (e.key === 'ArrowRight') nextPhoto();
+                }
+            });
+
+            // 點擊背景關閉
+            $('#photoModal').on('click', function(e) {
+                if (e.target === this) {
+                    closeModal();
+                }
+            });
+
+            // 初始化
+            initFilters();
+            renderGallery();
+        });
+    </script>
+</body>
+</html>
