@@ -41,6 +41,10 @@ using (var scope = app.Services.CreateScope())
 
         // 種子預設角色和用戶
         await DatabaseInitializer.SeedUsersAndRoles(services);
+
+        // 種子預設回憶
+        var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+        await DatabaseInitializer.SeedMemories(dbContext, userManager);
     }
     catch (Exception ex)
     {

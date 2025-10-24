@@ -386,6 +386,31 @@ body {
     transform: scale(1.1);
 }
 
+/* 編輯回憶按鈕 */
+.edit-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    z-index: 10;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255,255,255,0.2);
+    backdrop-filter: blur(10px);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.edit-btn:hover {
+    background-color: rgba(255,255,255,0.3);
+    transform: scale(1.1);
+}
+
 /* 登入按鈕 */
 .login-btn {
     display: inline-block;

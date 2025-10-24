@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="~/css/gallery.css" asp-append-version="true" />
 </head>
 <body>
+    <div style="position: fixed; top: 0; left: 0; background-color: yellow; color: black; padding: 5px; z-index: 9999;">Authenticated: @User.Identity.IsAuthenticated.ToString()</div>
     <!-- 新增回憶按鈕 (只有登入用戶才顯示) -->
     @if (User.Identity.IsAuthenticated)
     {
@@ -94,6 +95,7 @@
         $(document).ready(function() {
             const photos = @Html.Raw(Json.Serialize(Model.Photos));
             const isAuthenticated = @User.Identity.IsAuthenticated.ToString().ToLower();
+            const currentUserId = "@Model.CurrentUserId";
 
             let currentFilter = 'all';
             let currentPhotoIndex = 0;
@@ -155,20 +157,19 @@
                                 </div>
                                 <h3 class="photo-title">${photo.title}</h3>
                                 <p class="photo-description">${photo.description}</p>
+                                <p>isAuthenticated: ${isAuthenticated}</p>
+                                <p>currentUserId: ${currentUserId}</p>
+                                <p>photo.userId: ${photo.userId}</p>
                             </div>
+                            ${isAuthenticated && photo.userId === currentUserId ? `<a href="/Memories/Edit?id=${photo.id}" class="edit-btn" title="編輯回憶"><svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></a>` : ''}
                         </div>
                     `;
-
-                    if (isAuthenticated) {
-                        cardHtml = `<a href="/Memories/Edit?id=${photo.id}">${cardHtml}</a>`;
-                    }
 
                     const card = $(cardHtml);
 
                     card.on('click', function(e) {
-                        if (!isAuthenticated) { // Only open modal if not authenticated
-                            openModal($(this).data('index'));
-                        } else if (e.target.tagName !== 'A' && $(e.target).closest('a').length === 0) { // Prevent modal if clicking on the edit link
+                        // Only open modal if not clicking on the edit button
+                        if (!$(e.target).closest('.edit-btn').length) {
                             openModal($(this).data('index'));
                         }
                     });

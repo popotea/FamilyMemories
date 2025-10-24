@@ -17,38 +17,40 @@ namespace FamilyMemories.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _logger = logger;
             _context = context;
+            _userManager = userManager;
         }
 
         [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            var memories = await _context.Memories.OrderByDescending(m => m.Date).ToListAsync();
-
-            foreach (var memory in memories)
-            {
-                _logger.LogInformation("Memory ImagePath: {ImagePath}", memory.ImagePath);
-            }
+            var memories = await _context.Memories
+                .Include(m => m.ApplicationUser)
+                .OrderByDescending(m => m.Date)
+                .ToListAsync();
 
             var photos = memories.Select(m => new PhotoViewModel
             {
                 Id = m.Id,
                 ImageUrl = m.ImagePath,
-                Member = "", // Placeholder, as Memory model does not have MemberName
+                Member = m.ApplicationUser?.FullName ?? m.ApplicationUser?.UserName ?? "未知", // Display FullName, then UserName, then "未知"
                 Date = m.Date.ToString("yyyy年MM月dd日"),
                 Title = m.Title,
-                Description = m.Description
+                Description = m.Description,
+                UserId = m.ApplicationUserId
             }).ToList();
 
             var viewModel = new IndexViewModel
             {
                 WelcomeMessage = "歡迎使用家庭回憶相簿",
                 AppDescription = "記錄您最珍貴的家庭時刻",
-                Photos = photos
+                Photos = photos,
+                CurrentUserId = _userManager.GetUserId(User)
             };
 
             return View(viewModel);

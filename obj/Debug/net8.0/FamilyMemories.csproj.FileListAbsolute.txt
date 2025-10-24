@@ -434,3 +434,4 @@ C:\code\FamilyMemories\FamilyMemories\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
 C:\code\FamilyMemories\FamilyMemories\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
 C:\code\FamilyMemories\FamilyMemories\obj\Debug\net8.0\staticwebassets.build.json.cache
 C:\code\FamilyMemories\FamilyMemories\obj\Debug\net8.0\staticwebassets.build.endpoints.json
+C:\code\FamilyMemories\FamilyMemories\obj\Debug\net8.0\FamilyMemories.sourcelink.json
