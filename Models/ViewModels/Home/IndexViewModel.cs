@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using FamilyMemories.Models;
+using FamilyMemories.Models.ViewModels;
 
 namespace FamilyMemories.Models.ViewModels.Home
 {

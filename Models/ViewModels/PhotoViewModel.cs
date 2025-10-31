@@ -1,4 +1,4 @@
-namespace FamilyMemories.Models.ViewModels.Home
+namespace FamilyMemories.Models.ViewModels
 {
     public class PhotoViewModel
     {
@@ -9,5 +9,6 @@ namespace FamilyMemories.Models.ViewModels.Home
         public string Title { get; set; }
         public string Description { get; set; }
         public string UserId { get; set; }
+        public bool IsEditable { get; set; }
     }
 }

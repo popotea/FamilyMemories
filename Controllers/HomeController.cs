@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using FamilyMemories.Data;
+using FamilyMemories.Models.ViewModels;
 using FamilyMemories.Models.ViewModels.Home;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -29,9 +30,11 @@ namespace FamilyMemories.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
+            var currentUser = await _userManager.GetUserAsync(User);
             var memories = await _context.Memories
                 .Include(m => m.ApplicationUser)
                 .OrderByDescending(m => m.Date)
+                .Take(10)
                 .ToListAsync();
 
             var photos = memories.Select(m => new PhotoViewModel
@@ -42,15 +45,16 @@ namespace FamilyMemories.Controllers
                 Date = m.Date.ToString("yyyy年MM月dd日"),
                 Title = m.Title,
                 Description = m.Description,
-                UserId = m.ApplicationUserId
+                UserId = m.ApplicationUserId,
+                IsEditable = currentUser != null && m.ApplicationUserId == currentUser.Id
             }).ToList();
 
             var viewModel = new IndexViewModel
             {
-                WelcomeMessage = "歡迎使用家庭回憶相簿",
+                WelcomeMessage = currentUser != null ? $"歡迎回來, {currentUser.FullName ?? currentUser.UserName}!" : "歡迎使用家庭回憶相簿",
                 AppDescription = "記錄您最珍貴的家庭時刻",
                 Photos = photos,
-                CurrentUserId = _userManager.GetUserId(User)
+                CurrentUserId = currentUser?.Id
             };
 
             return View(viewModel);

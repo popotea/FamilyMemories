@@ -9,73 +9,71 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = FamilyMemories
 build_property.RootNamespace = FamilyMemories
-build_property.ProjectDir = C:\code\FamilyMemories\FamilyMemories\
+build_property.ProjectDir = /app/
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 8.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = true
-build_property.MSBuildProjectDirectory = C:\code\FamilyMemories\FamilyMemories
+build_property.MSBuildProjectDirectory = /app
 build_property._RazorSourceGeneratorDebug = 
-build_property.EffectiveAnalysisLevelStyle = 8.0
-build_property.EnableCodeStyleSeverity = 
 
-[C:/code/FamilyMemories/FamilyMemories/Pages/Identity/Account/Login.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSWRlbnRpdHlcQWNjb3VudFxMb2dpbi5jc2h0bWw=
+[/app/Pages/Identity/Account/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvSWRlbnRpdHkvQWNjb3VudC9Mb2dpbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/code/FamilyMemories/FamilyMemories/Pages/Identity/Account/Logout.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSWRlbnRpdHlcQWNjb3VudFxMb2dvdXQuY3NodG1s
+[/app/Pages/Identity/Account/Logout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvSWRlbnRpdHkvQWNjb3VudC9Mb2dvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/code/FamilyMemories/FamilyMemories/Pages/Identity/Account/Register.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSWRlbnRpdHlcQWNjb3VudFxSZWdpc3Rlci5jc2h0bWw=
+[/app/Pages/Identity/Account/Register.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvSWRlbnRpdHkvQWNjb3VudC9SZWdpc3Rlci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/code/FamilyMemories/FamilyMemories/Pages/Memories/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTWVtb3JpZXNcQ3JlYXRlLmNzaHRtbA==
+[/app/Pages/Memories/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvTWVtb3JpZXMvQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/code/FamilyMemories/FamilyMemories/Pages/Memories/Delete.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTWVtb3JpZXNcRGVsZXRlLmNzaHRtbA==
+[/app/Pages/Memories/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvTWVtb3JpZXMvRGVsZXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/code/FamilyMemories/FamilyMemories/Pages/Memories/Edit.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTWVtb3JpZXNcRWRpdC5jc2h0bWw=
+[/app/Pages/Memories/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvTWVtb3JpZXMvRWRpdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/code/FamilyMemories/FamilyMemories/Pages/Memories/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTWVtb3JpZXNcSW5kZXguY3NodG1s
+[/app/Pages/Memories/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvTWVtb3JpZXMvSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/code/FamilyMemories/FamilyMemories/Pages/Memories/_ViewImports.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTWVtb3JpZXNcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+[/app/Pages/Memories/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvTWVtb3JpZXMvX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/code/FamilyMemories/FamilyMemories/Pages/Shared/_GalleryStyles.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU2hhcmVkXF9HYWxsZXJ5U3R5bGVzLmNzaHRtbA==
+[/app/Pages/Shared/_GalleryStyles.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvU2hhcmVkL19HYWxsZXJ5U3R5bGVzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/code/FamilyMemories/FamilyMemories/Pages/Shared/_ValidationScriptsPartial.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+[/app/Pages/Shared/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvU2hhcmVkL19WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/code/FamilyMemories/FamilyMemories/Pages/_ViewImports.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+[/app/Pages/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/code/FamilyMemories/FamilyMemories/Pages/_ViewStart.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX1ZpZXdTdGFydC5jc2h0bWw=
+[/app/Pages/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/code/FamilyMemories/FamilyMemories/Views/Home/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
+[/app/Views/Home/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9JbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/code/FamilyMemories/FamilyMemories/Views/Shared/_Layout.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
+[/app/Views/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/code/FamilyMemories/FamilyMemories/Pages/Shared/_Layout.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU2hhcmVkXF9MYXlvdXQuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = b-2o0uqqwajm
+[/app/Pages/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXMvU2hhcmVkL19MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = b-pf2wg1zpqe

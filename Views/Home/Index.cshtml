@@ -9,11 +9,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewData["Title"]</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <link rel="stylesheet" href="~/css/gallery.css" asp-append-version="true" />
+    <style>
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .photo-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .photo-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .photo-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .photo-card:hover img {
+            transform: scale(1.05);
+        }
+    </style>
 </head>
 <body>
-    <div style="position: fixed; top: 0; left: 0; background-color: yellow; color: black; padding: 5px; z-index: 9999;">Authenticated: @User.Identity.IsAuthenticated.ToString()</div>
     <!-- 新增回憶按鈕 (只有登入用戶才顯示) -->
     @if (User.Identity.IsAuthenticated)
     {
@@ -29,6 +59,7 @@
     <!-- 頂部標題欄 -->
     <div class="header">
         <h1>@Model.WelcomeMessage</h1>
+        <p>@Model.AppDescription</p>
         <div class="filter-container" id="filterContainer">
             <!-- 篩選按鈕將由 JS 動態生成 -->
         </div>
@@ -91,6 +122,49 @@
         </div>
     </div>
 
+    <!-- Edit Memory Modal -->
+    <div class="modal fade" id="editMemoryModal" tabindex="-1" aria-labelledby="editMemoryModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editMemoryModalLabel">編輯回憶</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editMemoryForm">
+                        <input type="hidden" id="editMemoryId">
+                        <div class="mb-3">
+                            <label for="editMemoryTitle" class="form-label">標題</label>
+                            <input type="text" class="form-control" id="editMemoryTitle" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editMemoryDescription" class="form-label">描述</label>
+                            <textarea class="form-control" id="editMemoryDescription" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editMemoryDate" class="form-label">日期</label>
+                            <input type="date" class="form-control" id="editMemoryDate" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editMemoryMember" class="form-label">成員</label>
+                            <input type="text" class="form-control" id="editMemoryMember" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editMemoryImage" class="form-label">目前圖片</label>
+                            <img id="currentMemoryImage" src="" class="img-fluid mb-2" alt="Current Memory Image">
+                            <label for="editMemoryImageFile" class="form-label">上傳新圖片 (可選)</label>
+                            <input class="form-control" type="file" id="editMemoryImageFile">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                    <button type="submit" form="editMemoryForm" class="btn btn-primary">儲存變更</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         $(document).ready(function() {
             const photos = @Html.Raw(Json.Serialize(Model.Photos));
@@ -100,6 +174,8 @@
             let currentFilter = 'all';
             let currentPhotoIndex = 0;
             let filteredPhotos = photos;
+            let currentPage = 1;
+            let isLoading = false;
 
             // 取得所有成員
             const members = ['all', ...new Set(photos.map(p => p.member))];
@@ -157,18 +233,18 @@
                                 </div>
                                 <h3 class="photo-title">${photo.title}</h3>
                                 <p class="photo-description">${photo.description}</p>
-                                <p>isAuthenticated: ${isAuthenticated}</p>
-                                <p>currentUserId: ${currentUserId}</p>
-                                <p>photo.userId: ${photo.userId}</p>
                             </div>
-                            ${isAuthenticated && photo.userId === currentUserId ? `<a href="/Memories/Edit?id=${photo.id}" class="edit-btn" title="編輯回憶"><svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></a>` : ''}
+                            ${photo.isEditable ? `<button class="edit-btn" data-photo-id="${photo.id}" title="編輯回憶"><svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></button>` : ''}
                         </div>
                     `;
 
                     const card = $(cardHtml);
 
+                    card.find('.edit-btn').on('click', function() {
+                        openEditModal($(this).data('photo-id'));
+                    });
+
                     card.on('click', function(e) {
-                        // Only open modal if not clicking on the edit button
                         if (!$(e.target).closest('.edit-btn').length) {
                             openModal($(this).data('index'));
                         }
@@ -236,10 +312,84 @@
                 }
             });
 
+            function openEditModal(photoId) {
+                const photo = photos.find(p => p.id === photoId);
+                if (photo) {
+                    $('#editMemoryId').val(photo.id);
+                    $('#editMemoryTitle').val(photo.title);
+                    $('#editMemoryDescription').val(photo.description);
+                    $('#editMemoryDate').val(photo.date.substring(0, 10).replace('年', '-').replace('月', '-').replace('日', ''));
+                    $('#editMemoryMember').val(photo.member);
+                    $('#currentMemoryImage').attr('src', photo.imageUrl);
+                    const editModal = new bootstrap.Modal(document.getElementById('editMemoryModal'));
+                    editModal.show();
+                }
+            }
+
+            $('#editMemoryForm').on('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                const memoryId = parseInt($('#editMemoryId').val());
+
+                fetch('/api/memories/update', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message === 'Memory updated successfully.') {
+                        const updatedPhotoIndex = photos.findIndex(p => p.id === memoryId);
+                        if (updatedPhotoIndex > -1) {
+                            const updatedPhoto = photos[updatedPhotoIndex];
+                            updatedPhoto.title = $('#editMemoryTitle').val();
+                            updatedPhoto.description = $('#editMemoryDescription').val();
+                            updatedPhoto.date = new Date($('#editMemoryDate').val()).toLocaleDateString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '年');
+                            updatedPhoto.member = $('#editMemoryMember').val();
+
+                            const imageFile = $('#editMemoryImageFile')[0].files[0];
+                            if(imageFile){
+                                updatedPhoto.imageUrl = URL.createObjectURL(imageFile);
+                            }
+                        }
+                        renderGallery();
+                        const editModal = bootstrap.Modal.getInstance(document.getElementById('editMemoryModal'));
+                        editModal.hide();
+                    } else {
+                        alert('Error updating memory.');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            });
+
+            $(window).on('scroll', function() {
+                if ($(window).scrollTop() + $(window).height() >= $(document).height() - 100 && !isLoading) {
+                    loadMorePhotos();
+                }
+            });
+
+            function loadMorePhotos() {
+                isLoading = true;
+                currentPage++;
+                fetch(`/api/memories?page=${currentPage}`)
+                    .then(response => response.json())
+                    .then(newPhotos => {
+                        if (newPhotos.length > 0) {
+                            photos.push(...newPhotos);
+                            renderGallery();
+                        }
+                        isLoading = false;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching more photos:', error);
+                        isLoading = false;
+                    });
+            }
+
             // 初始化
             initFilters();
             renderGallery();
         });
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>
