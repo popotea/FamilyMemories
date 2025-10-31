@@ -1,0 +1,41 @@
+﻿# .gitignore for .NET projects
+
+# Build folders
+bin/
+obj/
+
+# Visual Studio files
+.vs/
+*.user
+*.suo
+*.userosscache
+
+# Rider
+.idea/
+*.sln.iml
+
+# Local DB files
+*.db
+*.db-shm
+*.db-wal
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Visual Studio Code
+.vscode/
+
+# NuGet
+*.nupkg
+# Paket
+.paket/
+
+# Static web assets upToDate
+obj/**/staticwebassets.upToDateCheck.txt
+
+# Keep project lock files
+!packages.lock.json
