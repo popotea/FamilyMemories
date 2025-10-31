@@ -13,7 +13,6 @@
     <link rel="stylesheet" href="~/css/gallery.css" asp-append-version="true" />
 </head>
 <body>
-    <div style="position: fixed; top: 0; left: 0; background-color: yellow; color: black; padding: 5px; z-index: 9999;">Authenticated: @User.Identity.IsAuthenticated.ToString()</div>
     <!-- 新增回憶按鈕 (只有登入用戶才顯示) -->
     @if (User.Identity.IsAuthenticated)
     {
@@ -28,7 +27,7 @@
 
     <!-- 頂部標題欄 -->
     <div class="header">
-        <h1>@Model.WelcomeMessage</h1>
+        <h1>當我們彤再一起</h1>
         <div class="filter-container" id="filterContainer">
             <!-- 篩選按鈕將由 JS 動態生成 -->
         </div>
@@ -88,6 +87,29 @@
                     </svg>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal" id="editModal">
+        <div class="modal-content-edit">
+            <button class="modal-btn modal-close" id="editModalClose">
+                <svg class="icon-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+            <form id="editForm">
+                <input type="hidden" id="editPhotoId">
+                <div class="form-group">
+                    <label for="editTitle">標題</label>
+                    <input type="text" id="editTitle" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="editDescription">描述</label>
+                    <textarea id="editDescription" class="form-control"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">儲存</button>
+            </form>
         </div>
     </div>
 
@@ -157,19 +179,17 @@
                                 </div>
                                 <h3 class="photo-title">${photo.title}</h3>
                                 <p class="photo-description">${photo.description}</p>
-                                <p>isAuthenticated: ${isAuthenticated}</p>
-                                <p>currentUserId: ${currentUserId}</p>
-                                <p>photo.userId: ${photo.userId}</p>
                             </div>
-                            ${isAuthenticated && photo.userId === currentUserId ? `<a href="/Memories/Edit?id=${photo.id}" class="edit-btn" title="編輯回憶"><svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></a>` : ''}
+                            ${isAuthenticated && photo.userId === currentUserId ? `<button class="edit-btn" data-id="${photo.id}" title="編輯回憶"><svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></button>` : ''}
                         </div>
                     `;
 
                     const card = $(cardHtml);
 
                     card.on('click', function(e) {
-                        // Only open modal if not clicking on the edit button
-                        if (!$(e.target).closest('.edit-btn').length) {
+                        if ($(e.target).closest('.edit-btn').length) {
+                            openEditModal($(e.target).closest('.edit-btn').data('id'));
+                        } else {
                             openModal($(this).data('index'));
                         }
                     });
@@ -226,6 +246,8 @@
                     if (e.key === 'Escape') closeModal();
                     if (e.key === 'ArrowLeft') prevPhoto();
                     if (e.key === 'ArrowRight') nextPhoto();
+                } else if ($('#editModal').hasClass('active')) {
+                    if (e.key === 'Escape') closeEditModal();
                 }
             });
 
@@ -234,6 +256,61 @@
                 if (e.target === this) {
                     closeModal();
                 }
+            });
+
+            $('#editModal').on('click', function(e) {
+                if (e.target === this) {
+                    closeEditModal();
+                }
+            });
+
+            function openEditModal(photoId) {
+                const photo = photos.find(p => p.id === photoId);
+                if (photo) {
+                    $('#editPhotoId').val(photo.id);
+                    $('#editTitle').val(photo.title);
+                    $('#editDescription').val(photo.description);
+                    $('#editModal').addClass('active');
+                    $('body').css('overflow', 'hidden');
+                }
+            }
+
+            function closeEditModal() {
+                $('#editModal').removeClass('active');
+                $('body').css('overflow', 'auto');
+            }
+
+            $('#editModalClose').on('click', closeEditModal);
+
+            $('#editForm').on('submit', function(e) {
+                e.preventDefault();
+                const photoId = $('#editPhotoId').val();
+                const updatedPhoto = {
+                    title: $('#editTitle').val(),
+                    description: $('#editDescription').val()
+                };
+
+                $.ajax({
+                    url: `/api/memories/${photoId}`,
+                    type: 'PATCH',
+                    contentType: 'application/json',
+                    data: JSON.stringify(updatedPhoto),
+                    success: function() {
+                        // Find the photo in the photos array and update it
+                        const photoIndex = photos.findIndex(p => p.id == photoId);
+                        if (photoIndex !== -1) {
+                            photos[photoIndex].title = updatedPhoto.title;
+                            photos[photoIndex].description = updatedPhoto.description;
+                        }
+                        // Re-render the gallery to show the updated information
+                        renderGallery();
+                        closeEditModal();
+                    },
+                    error: function() {
+                        // Handle error
+                        alert('更新失敗');
+                    }
+                });
             });
 
             // 初始化
