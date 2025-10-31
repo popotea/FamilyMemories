@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using FamilyMemories.Data;
 using FamilyMemories.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,10 +16,12 @@ namespace FamilyMemories.Controllers.Api
     public class MemoriesController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public MemoriesController(ApplicationDbContext context)
+        public MemoriesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: api/memories
@@ -72,12 +76,14 @@ namespace FamilyMemories.Controllers.Api
                 return BadRequest(ModelState);
             }
 
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var memory = new Memory
             {
                 Title = memoryDto.Title,
                 Description = memoryDto.Description,
                 Date = memoryDto.Date,
-                ImagePath = memoryDto.ImagePath
+                ImagePath = memoryDto.ImagePath,
+                ApplicationUserId = userId
             };
 
             _context.Memories.Add(memory);
@@ -109,6 +115,12 @@ namespace FamilyMemories.Controllers.Api
             if (memory == null)
             {
                 return NotFound();
+            }
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (memory.ApplicationUserId != userId && !User.IsInRole("Admin"))
+            {
+                return Forbid();
             }
 
             memory.Title = memoryDto.Title;
@@ -148,6 +160,12 @@ namespace FamilyMemories.Controllers.Api
             if (memory == null)
             {
                 return NotFound();
+            }
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (memory.ApplicationUserId != userId && !User.IsInRole("Admin"))
+            {
+                return Forbid();
             }
 
             _context.Memories.Remove(memory);
