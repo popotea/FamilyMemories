@@ -1,0 +1,32 @@
+@model FamilyMemories.Models.ApplicationRole
+
+@{
+    ViewData["Title"] = "編輯角色";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<h4>角色</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="EditRole">
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="儲存" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">返回列表</a>
+</div>
