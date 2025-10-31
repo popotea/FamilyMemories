@@ -29,6 +29,7 @@
     <!-- 頂部標題欄 -->
     <div class="header">
         <h1>@Model.WelcomeMessage</h1>
+        <p>@Model.AppDescription</p>
         <div class="filter-container" id="filterContainer">
             <!-- 篩選按鈕將由 JS 動態生成 -->
         </div>
@@ -157,11 +158,8 @@
                                 </div>
                                 <h3 class="photo-title">${photo.title}</h3>
                                 <p class="photo-description">${photo.description}</p>
-                                <p>isAuthenticated: ${isAuthenticated}</p>
-                                <p>currentUserId: ${currentUserId}</p>
-                                <p>photo.userId: ${photo.userId}</p>
                             </div>
-                            ${isAuthenticated && photo.userId === currentUserId ? `<a href="/Memories/Edit?id=${photo.id}" class="edit-btn" title="編輯回憶"><svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></a>` : ''}
+                            ${photo.isEditable ? `<a href="/Memories/Edit?id=${photo.id}" class="edit-btn" title="編輯回憶"><svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></a>` : ''}
                         </div>
                     `;
 
