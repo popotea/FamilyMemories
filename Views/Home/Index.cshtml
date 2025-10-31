@@ -12,7 +12,62 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <link rel="stylesheet" href="~/css/gallery.css" asp-append-version="true" />
     <style>
-        /* Admin quick access button */
+        /* Theme variables: default = dark theme, add `light` class on body for light theme */
+        :root{
+            --bg: #000000;
+            --text: #ffffff;
+            --muted: rgba(255,255,255,0.75);
+            --tag-bg: rgba(255,255,255,0.12);
+            --overlay-top: rgba(0,0,0,0.85);
+            --overlay-mid: rgba(0,0,0,0.28);
+        }
+        body.light{
+            --bg: #ffffff;
+            --text: #0b1220;
+            --muted: #6c757d;
+            --tag-bg: rgba(0,0,0,0.06);
+            --overlay-top: rgba(255,255,255,0.92);
+            --overlay-mid: rgba(255,255,255,0.7);
+        }
+
+        /* Apply variables */
+        body{
+            background: var(--bg);
+            color: var(--text);
+            transition: background 220ms ease, color 220ms ease;
+        }
+
+        /* Photo card text follows theme */
+        .photo-title {
+            color: var(--text) !important;
+        }
+        .photo-date, .photo-member, .photo-description {
+            color: var(--muted) !important;
+        }
+        .photo-tag {
+            background: var(--tag-bg) !important;
+            color: var(--text) !important;
+        }
+
+        /* Overlay uses variables to create readable gradient on both themes */
+        .photo-overlay {
+            background: linear-gradient(to top, var(--overlay-top), var(--overlay-mid), transparent) !important;
+        }
+
+        /* Modal info should also respect text colors */
+        .modal-info,
+        .modal-title,
+        .modal-description,
+        .modal-date {
+            color: var(--text) !important;
+        }
+        .modal .modal-info { background: transparent; }
+
+        /* Ensure links/buttons on cards remain visible */
+        .photo-card .edit-btn svg { stroke: var(--text); }
+
+        /* Admin quick button kept as-is */
+        /* ...existing admin quick css... */
         .admin-quick-btn {
             position: fixed;
             top: 1rem;
@@ -41,7 +96,12 @@
     </style>
 </head>
 <body>
-    <!-- 主題切換（明亮/黑暗） -->
+ <!-- 開發用：快速登入連結（暫時，之後可移除） -->
+ <div style="position:fixed; bottom:1rem; right:1rem; z-index:1200;">
+ <a href="/Identity/Account/Login" style="display:inline-block; padding:0.5rem0.75rem; background:#ffc107; color:#000; border-radius:0.5rem; box-shadow:04px12px rgba(0,0,0,0.12); text-decoration:none; font-weight:600;">開發：登入</a>
+ </div>
+
+ <!-- 主題切換（明亮/黑暗） -->
     <button class="theme-toggle" id="themeToggle" title="切換主題" aria-label="切換主題">
         <!-- 預設圖示會由 JS 依主題切換 -->
         <svg id="themeToggleIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

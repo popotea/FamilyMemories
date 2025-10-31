@@ -8,6 +8,13 @@ body.bg-light{
  background:#f7f9fc;
 }
 
+/* Avatar */
+.admin-avatar{
+ width:32px;
+ height:32px;
+ object-fit:cover;
+}
+
 /* Sidebar */
 .sidebar{
  min-height:100vh;
@@ -47,4 +54,5 @@ body.bg-light{
 @media (max-width:767px){
  #adminSidebar{position:relative;}
  .sidebar{border-right:none}
+ .admin-card{margin-bottom:1rem}
 }

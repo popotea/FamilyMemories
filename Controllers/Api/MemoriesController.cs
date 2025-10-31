@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FamilyMemories.Data;
@@ -6,6 +6,10 @@ using FamilyMemories.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using System.IO;
+using System;
 
 namespace FamilyMemories.Controllers.Api
 {
@@ -14,10 +18,14 @@ namespace FamilyMemories.Controllers.Api
     public class MemoriesController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _env;
+        private const long MaxFileSize = 5 * 1024 * 1024; // 5 MB
+        private readonly string[] AllowedExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
 
-        public MemoriesController(ApplicationDbContext context)
+        public MemoriesController(ApplicationDbContext context, IWebHostEnvironment env)
         {
             _context = context;
+            _env = env;
         }
 
         // GET: api/memories
@@ -193,6 +201,74 @@ namespace FamilyMemories.Controllers.Api
 
             return NoContent();
         }
+
+        // POST: api/memories/batch
+        [HttpPost("batch")]
+        [Authorize]
+        public async Task<IActionResult> BatchUpdate([FromBody] BatchUpdateDto batch)
+        {
+            if (batch?.Items == null || batch.Items.Count == 0)
+                return BadRequest("No items provided.");
+
+            var ids = batch.Items.Select(i => i.Id).ToList();
+            var memories = await _context.Memories.Where(m => ids.Contains(m.Id)).ToListAsync();
+
+            foreach (var item in batch.Items)
+            {
+                var mem = memories.FirstOrDefault(m => m.Id == item.Id);
+                if (mem != null)
+                {
+                    mem.Title = item.Title;
+                    mem.Description = item.Description;
+                    if (!string.IsNullOrEmpty(item.ImagePath))
+                    {
+                        mem.ImagePath = item.ImagePath;
+                    }
+                }
+            }
+
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
+        // POST: api/memories/{id}/image
+        [HttpPost("{id}/image")]
+        [Authorize]
+        public async Task<IActionResult> UploadImage(int id, IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+                return BadRequest(new { error = "No file uploaded." });
+
+            // Validate file size (max 5 MB)
+            if (file.Length > MaxFileSize)
+                return BadRequest(new { error = $"File size exceeds {MaxFileSize / 1024 / 1024} MB limit." });
+
+            // Validate file extension
+            var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
+            if (string.IsNullOrEmpty(ext) || !AllowedExtensions.Contains(ext))
+                return BadRequest(new { error = "Only image files (.jpg, .jpeg, .png, .gif, .webp) are allowed." });
+
+            var memory = await _context.Memories.FindAsync(id);
+            if (memory == null)
+                return NotFound();
+
+            var uploadsFolder = Path.Combine(_env.WebRootPath, "uploads");
+            if (!Directory.Exists(uploadsFolder)) Directory.CreateDirectory(uploadsFolder);
+
+            var fileName = $"{Guid.NewGuid()}{ext}";
+            var filePath = Path.Combine(uploadsFolder, fileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            // store filename only; front-end will resolve to /uploads/{filename}
+            memory.ImagePath = fileName;
+            await _context.SaveChangesAsync();
+
+            return Ok(new { fileName, imagePath = memory.ImagePath });
+        }
     }
 
     // DTO Classes
@@ -226,5 +302,18 @@ namespace FamilyMemories.Controllers.Api
     {
         public string Title { get; set; }
         public string Description { get; set; }
+    }
+
+    public class BatchUpdateDto
+    {
+        public List<BatchUpdateItem> Items { get; set; }
+    }
+
+    public class BatchUpdateItem
+    {
+        public int Id { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public string ImagePath { get; set; } // added to support image updates in batch
     }
 }
