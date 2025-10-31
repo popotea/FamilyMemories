@@ -1,0 +1,23 @@
+﻿@model FamilyMemories.Models.ViewModels.Admin.RoleCreateViewModel
+
+@{
+ ViewData["Title"] = "Create role";
+ Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="admin-card">
+ <h3>新增角色</h3>
+ <form asp-action="CreateRole" method="post" class="mt-3">
+ <div class="mb-3">
+ <label asp-for="Name" class="form-label"></label>
+ <input asp-for="Name" class="form-control" />
+ <span asp-validation-for="Name" class="text-danger"></span>
+ </div>
+ <div class="mb-3">
+ <label asp-for="Description" class="form-label"></label>
+ <textarea asp-for="Description" class="form-control"></textarea>
+ </div>
+ <button type="submit" class="btn btn-primary">儲存</button>
+ <a asp-action="Roles" class="btn btn-link">取消</a>
+ </form>
+</div>

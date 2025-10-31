@@ -1,5 +1,37 @@
 /* Gallery Styles */
 
+:root {
+    /* Dark theme (default) */
+    --bg: #000000;
+    --fg: #ffffff;
+    --muted: rgba(255,255,255,0.7);
+    --soft-muted: rgba(255,255,255,0.6);
+    --overlay: rgba(0,0,0,0.6);
+    --card-bg: #121212;
+    --card-border: rgba(255,255,255,0.12);
+    --input-bg: #1a1a1a;
+    --input-fg: #ffffff;
+    --input-border: rgba(255,255,255,0.2);
+    --primary: #3b82f6; /* blue-500 */
+    --primary-hover: #2563eb; /* blue-600 */
+}
+
+/* Light theme overrides */
+body.light {
+    --bg: #f8fafc; /* slate-50 */
+    --fg: #0f172a; /* slate-900 */
+    --muted: rgba(15,23,42,0.7);
+    --soft-muted: rgba(15,23,42,0.6);
+    --overlay: rgba(0,0,0,0.5);
+    --card-bg: #ffffff;
+    --card-border: rgba(15,23,42,0.12);
+    --input-bg: #ffffff;
+    --input-fg: #0f172a;
+    --input-border: rgba(15,23,42,0.2);
+    --primary: #2563eb; /* blue-600 */
+    --primary-hover: #1d4ed8; /* blue-700 */
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -8,8 +40,8 @@
 
 body {
     font-family: 'Microsoft JhengHei', 'PingFang TC', sans-serif;
-    background-color: #000;
-    color: #fff;
+    background-color: var(--bg);
+    color: var(--fg);
     min-height: 100vh;
     margin: 0;
 }
@@ -22,6 +54,11 @@ body {
     background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
     backdrop-filter: blur(10px);
     padding: 1.5rem 1rem;
+}
+
+/* Light theme header tweak for readability */
+body.light .header {
+    background: linear-gradient(to bottom, rgba(255,255,255,0.85), rgba(255,255,255,0.6), transparent);
 }
 
 .header h1 {
@@ -59,7 +96,7 @@ body {
     cursor: pointer;
     transition: all 0.3s;
     background-color: rgba(255,255,255,0.2);
-    color: white;
+    color: var(--fg);
 }
 
 .filter-btn:hover {
@@ -67,8 +104,8 @@ body {
 }
 
 .filter-btn.active {
-    background-color: white;
-    color: black;
+    background-color: #ffffff;
+    color: #000000;
 }
 
 /* 相片網格 */
@@ -358,7 +395,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    color: rgba(255,255,255,0.6);
+    color: var(--soft-muted);
     font-size: 0.875rem;
 }
 
@@ -375,7 +412,7 @@ body {
 .empty-state {
     text-align: center;
     padding: 5rem 0;
-    color: rgba(255,255,255,0.6);
+    color: var(--soft-muted);
     font-size: 1.125rem;
 }
 
@@ -436,7 +473,7 @@ body {
     background: rgba(255,255,255,0.2);
     border: 1px solid rgba(255,255,255,0.3);
     border-radius: 20px;
-    color: white;
+    color: var(--fg);
     text-decoration: none;
     transition: all 0.3s;
 }
@@ -458,3 +495,94 @@ body {
     width: 1.25rem;
     height: 1.25rem;
 }
+
+/* ------- Edit Modal (center card) ------- */
+#editModal {
+    background-color: var(--overlay);
+}
+
+#editModal .modal-content-edit {
+    width: calc(100% - 2rem);
+    max-width: 560px;
+    background: var(--card-bg);
+    color: var(--fg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 1.25rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    position: relative;
+}
+
+@media (min-width: 640px) {
+    #editModal .modal-content-edit { padding: 1.5rem; }
+}
+
+#editModal .form-group { margin-bottom: 1rem; }
+#editModal label { display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--fg); }
+
+#editModal .form-control {
+    width: 100%;
+    padding: 0.625rem 0.75rem;
+    border-radius: 10px;
+    border: 1px solid var(--input-border);
+    background: var(--input-bg);
+    color: var(--input-fg);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+#editModal .form-control:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 30%, transparent);
+}
+
+/* Buttons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s, transform 0.05s;
+}
+
+.btn:active { transform: translateY(1px); }
+
+.btn-primary {
+    background: var(--primary);
+    color: #fff;
+}
+
+.btn-primary:hover { background: var(--primary-hover); }
+
+/* Edit button inside photo modal footer */
+#modalEditBtn {
+    margin-left: auto;
+}
+
+/* ------- Theme toggle button ------- */
+.theme-toggle {
+    position: fixed;
+    left: 1rem;
+    top: 1rem;
+    z-index: 60;
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid var(--card-border);
+    background: var(--card-bg);
+    color: var(--fg);
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+    transition: background-color 0.2s, border-color 0.2s, transform 0.05s;
+}
+
+.theme-toggle:hover { filter: brightness(1.05); }
+
+.theme-toggle svg { width: 1.25rem; height: 1.25rem; }

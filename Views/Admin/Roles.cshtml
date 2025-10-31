@@ -1,0 +1,42 @@
+﻿@model IEnumerable<FamilyMemories.Models.ApplicationRole>
+
+@{
+ ViewData["Title"] = "角色管理";
+ Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="admin-card">
+ <div class="d-flex justify-content-between align-items-center mb-3">
+ <h3>角色管理</h3>
+ <a asp-action="CreateRole" class="btn btn-primary">新增角色</a>
+ </div>
+
+ <div class="table-responsive">
+ <table class="table table-hover table-striped">
+ <thead class="table-dark">
+ <tr>
+ <th>名稱</th>
+ <th>描述</th>
+ <th>建立時間</th>
+ <th></th>
+ </tr>
+ </thead>
+ <tbody>
+ @foreach (var r in Model)
+ {
+ <tr>
+ <td>@r.Name</td>
+ <td>@r.Description</td>
+ <td>@r.CreatedAt.ToString("yyyy-MM-dd")</td>
+ <td class="text-end">
+ <a asp-action="EditRole" asp-route-id="@r.Id" class="btn btn-sm btn-outline-secondary me-1">編輯</a>
+ <form asp-action="DeleteRole" asp-route-id="@r.Id" method="post" style="display:inline">
+ <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('刪除此角色？');">刪除</button>
+ </form>
+ </td>
+ </tr>
+ }
+ </tbody>
+ </table>
+ </div>
+</div>

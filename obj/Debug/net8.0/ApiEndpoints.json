@@ -109,6 +109,27 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "FamilyMemories.Controllers.Api.MemoriesController",
+    "Method": "PatchMemory",
+    "RelativePath": "api/Memories/{id}",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "memoryDto",
+        "Type": "FamilyMemories.Controllers.Api.MemoryPatchDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Program\u002B\u003C\u003Ec",
     "Method": "\u003C\u003CMain\u003E$\u003Eb__0_3",
     "RelativePath": "popo/login",
