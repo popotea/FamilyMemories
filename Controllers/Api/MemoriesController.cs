@@ -160,6 +160,39 @@ namespace FamilyMemories.Controllers.Api
         {
             return _context.Memories.Any(e => e.Id == id);
         }
+
+        // PATCH: api/memories/5
+        [HttpPatch("{id}")]
+        [Authorize]
+        public async Task<IActionResult> PatchMemory(int id, MemoryPatchDto memoryDto)
+        {
+            var memory = await _context.Memories.FindAsync(id);
+            if (memory == null)
+            {
+                return NotFound();
+            }
+
+            memory.Title = memoryDto.Title;
+            memory.Description = memoryDto.Description;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!MemoryExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
     }
 
     // DTO Classes
@@ -187,5 +220,11 @@ namespace FamilyMemories.Controllers.Api
         public string Description { get; set; }
         public DateTime Date { get; set; }
         public string ImagePath { get; set; }
+    }
+
+    public class MemoryPatchDto
+    {
+        public string Title { get; set; }
+        public string Description { get; set; }
     }
 }

@@ -39,3 +39,15 @@ obj/**/staticwebassets.upToDateCheck.txt
 
 # Keep project lock files
 !packages.lock.json
+
+# User-specific settings
+appsettings.Development.json
+
+# Environment variables
+.env
+
+# Publish folder
+Properties/PublishProfiles/
+
+# Client-side build artifacts
+wwwroot/dist/
