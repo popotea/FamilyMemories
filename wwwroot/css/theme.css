@@ -1,4 +1,54 @@
-﻿/* Global theme variables for FamilyMemories
+﻿.main-header .nav-link {
+	color: var(--header-text) !important;
+	font-weight: 500;
+	background: transparent;
+	border-radius: 8px;
+}
+.main-header .nav-link img.admin-avatar {
+	margin-right: 0.5rem;
+	vertical-align: middle;
+	background: var(--surface);
+	color: var(--header-text);
+	border: 1px solid var(--card-border);
+}
+.main-header .dropdown-menu {
+	background: var(--surface);
+	color: var(--text);
+	border-radius: 8px;
+	box-shadow: var(--shadow);
+}
+.main-header .dropdown-item {
+	color: var(--text);
+}
+.main-header .dropdown-item:hover {
+	background: var(--primary);
+	color: #fff;
+}
+/* Navbar theme switch & avatar */
+.main-header .form-switch {
+	background: transparent;
+	padding: 0.25rem 0.75rem;
+	border-radius: 8px;
+}
+.main-header .form-check-input {
+	background-color: var(--surface);
+	border: 2px solid var(--primary);
+	box-shadow: none;
+}
+.main-header .form-check-input:checked {
+	background-color: var(--primary);
+	border-color: var(--primary);
+}
+.main-header .form-check-label {
+	color: var(--header-text);
+	font-weight: 500;
+}
+.main-header .admin-avatar {
+	background: var(--surface);
+	color: var(--header-text);
+	border: 1px solid var(--card-border);
+}
+/* Global theme variables for FamilyMemories
  Supports light/dark via body.theme-light / body.theme-dark
 */
 :root {
@@ -11,6 +61,12 @@
  --accent: #06b6d4;
  --radius:10px;
  --shadow:06px18px rgba(2,6,23,0.45);
+ --header-bg: #101624;
+ --header-text: #e6eef6;
+ --sidebar-bg: #1a2332;
+ --sidebar-fg: #e6eef6;
+ --footer-bg: #101624;
+ --footer-text: #a3b0c0;
 }
 body.theme-light {
  --bg: #f4f6f8;
@@ -21,6 +77,12 @@ body.theme-light {
  --primary: #2563eb;
  --accent: #0891b2;
  --shadow:06px18px rgba(15,23,42,0.06);
+ --header-bg: #f8fafc;
+ --header-text: #0b1220;
+ --sidebar-bg: #f4f6f8;
+ --sidebar-fg: #0b1220;
+ --footer-bg: #f8fafc;
+ --footer-text: #6c757d;
 }
 
 /* Apply site-wide */
@@ -31,58 +93,127 @@ body {
 }
 
 /* Admin specific overrides */
+
+/* Admin specific overrides for theme switching */
 .main-sidebar {
- background: linear-gradient(180deg, rgba(15,23,42,0.95), rgba(7,10,20,0.95));
+	background: var(--sidebar-bg);
+	color: var(--sidebar-fg);
 }
 .brand-link {
- background: transparent;
- color: var(--text);
+	background: transparent;
+	color: var(--sidebar-fg);
 }
 .nav-sidebar .nav-link {
- color: var(--text);
- border-radius:8px;
+	color: var(--sidebar-fg);
+	border-radius:8px;
+	background: transparent;
 }
 .nav-sidebar .nav-link.active {
- background: linear-gradient(90deg, rgba(79,70,229,0.12), rgba(6,182,212,0.06));
- color: var(--primary) !important;
- box-shadow: var(--shadow);
+	background: linear-gradient(90deg, rgba(79,70,229,0.12), rgba(6,182,212,0.06));
+	color: var(--primary) !important;
+	box-shadow: var(--shadow);
 }
 
-.main-footer {
- background: transparent;
- color: var(--muted);
+.content-header {
+	background: var(--header-bg);
+	color: var(--header-text);
+}
+.content-header h1, .content-header .h1, .content-header .h2 {
+	color: var(--header-text);
+}
+
+.content-wrapper {
+	background: var(--bg);
+	color: var(--text);
 }
 
 .admin-card {
- background: var(--surface);
- border-radius: var(--radius);
- padding:1rem;
- box-shadow: var(--shadow);
+	background: var(--card);
+	color: var(--text);
+	border-radius: var(--radius);
+	padding:1rem;
+	box-shadow: var(--shadow);
+}
+
+.main-footer {
+	background: var(--footer-bg);
+	color: var(--footer-text);
 }
 
 .table thead th {
- background: transparent;
- color: var(--muted);
+	background: transparent;
+	color: var(--muted);
+ --card-border: #232a3a;
 }
 .table tbody tr:hover {
- background: rgba(255,255,255,0.02);
+	background: rgba(255,255,255,0.02);
 }
 
 .btn-primary {
- background: var(--primary);
- border-color: transparent;
+	background: var(--primary);
+	border-color: transparent;
 }
 
 /* Utility for small thumbnails */
 .img-thumb {
- width:64px; height:48px; object-fit:cover; border-radius:6px; border:1px solid rgba(255,255,255,0.04);
+	width:64px; height:48px; object-fit:cover; border-radius:6px; border:1px solid rgba(255,255,255,0.04);
 }
 
 /* Controls */
+ --card-border: #d1d5db;
 .admin-controls { display:flex; gap:0.5rem; align-items:center; }
+.main-sidebar {
+	background: var(--sidebar-bg);
+	color: var(--sidebar-fg);
+	box-shadow: 2px 0 12px rgba(0,0,0,0.10);
+}
+.brand-link {
+	background: var(--sidebar-bg);
+	color: var(--sidebar-fg);
+	border-bottom: 1px solid var(--card-border);
+}
+.nav-sidebar .nav-link {
+	color: var(--sidebar-fg);
+	border-radius:8px;
+	background: transparent;
+}
+.nav-sidebar .nav-link.active {
+	background: linear-gradient(90deg, rgba(79,70,229,0.18), rgba(6,182,212,0.10));
+	color: var(--primary) !important;
+	box-shadow: var(--shadow);
+}
+
+.content-header {
+	background: var(--header-bg);
+	color: var(--header-text);
+	border-bottom: 1px solid var(--card-border);
+}
+.content-header h1, .content-header .h1, .content-header .h2 {
+	color: var(--header-text);
+}
+
+.content-wrapper {
+	background: var(--bg);
+	color: var(--text);
+}
+
+.admin-card {
+	background: var(--card);
+	color: var(--text);
+	border-radius: var(--radius);
+	padding:1rem;
+	box-shadow: var(--shadow);
+	border: 1.5px solid var(--card-border);
+}
+
+.main-footer {
+	background: var(--footer-bg);
+	color: var(--footer-text);
+	border-top: 1px solid var(--card-border);
+}
 .search-input { min-width:220px; }
 
 /* Responsive tweaks */
 @media (max-width:767px){
- .admin-controls { flex-direction:column; align-items:stretch; }
+	.admin-controls { flex-direction:column; align-items:stretch; }
 }

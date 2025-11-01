@@ -12,6 +12,7 @@ namespace FamilyMemories.Data
         }
 
         public DbSet<Memory> Memories { get; set; }
+        public DbSet<Menu> Menus { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

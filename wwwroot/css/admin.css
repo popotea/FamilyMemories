@@ -12,30 +12,104 @@ body.bg-light{
 .admin-avatar{
  width:32px;
  height:32px;
+	background: var(--sidebar-bg);
+	color: var(--sidebar-fg);
+	border-right: 1px solid var(--card-border);
  object-fit:cover;
 }
 
 /* Sidebar */
-.sidebar{
- min-height:100vh;
- border-right:1px solid rgba(0,0,0,0.06);
+/* AdminLTE sidebar 固定左側 */
+.main-sidebar {
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 100vh;
+	width: 220px;
+	z-index: 1050;
+	background: var(--surface, #1a2332);
+	box-shadow: 2px 0 8px rgba(0,0,0,0.04);
 }
 
-.sidebar .nav-link{
- color:#333;
- padding:0.6rem1rem;
+.sidebar {
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	border-right: 1px solid rgba(0,0,0,0.06);
+	background: transparent;
 }
 
-.sidebar .nav-link.active,
-.sidebar .nav-link:hover{
- background:rgba(13,110,253,0.06);
- color:var(--primary);
- border-radius:0.4rem;
+.nav-sidebar {
+	flex-direction: column;
 }
 
-/* Content header */
+.nav-sidebar .nav-link {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	color: var(--text, #e6eef6);
+	padding: 0.6rem 1rem;
+	border-radius: 8px;
+	transition: background 0.2s, color 0.2s;
+}
+
+.nav-sidebar .nav-link.active,
+.nav-sidebar .nav-link:hover {
+	background: linear-gradient(90deg, rgba(79,70,229,0.12), rgba(6,182,212,0.06));
+	color: var(--primary, #4f46e5) !important;
+	box-shadow: var(--shadow, 0 6px 18px rgba(2,6,23,0.12));
+}
+
+/* 內容區域左側留出 sidebar 寬度 */
+/* 內容區域左側留出 sidebar 寬度，手機板自動全寬 */
+.content-wrapper {
+  margin-left: 220px;
+  background: var(--bg, #0b0f17);
+  min-height: 100vh;
+}
+
+@media (max-width: 767px) {
+  .main-sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+  }
+  .main-sidebar.show-mobile {
+    display: block !important;
+    transform: translateX(0);
+  }
+  .content-wrapper {
+    margin-left: 0 !important;
+  }
+  #sidebarToggle {
+    display: inline-block !important;
+  }
+}
+
+@media (min-width: 768px) {
+  #sidebarToggle {
+    display: none !important;
+  }
+}/* Content header */
 .h2{
  font-weight:600;
+}
+
+.content-header {
+	padding: 1.25rem 1rem 0.5rem 1rem;
+	background: var(--card-bg);
+	color: var(--fg);
+	border-bottom: 1px solid var(--card-border);
+	margin-bottom: 0.5rem;
+}
+.content-header h1, .content-header .h1, .content-header .h2 {
+	font-size: 1.35rem;
+	font-weight: 600;
+	margin: 0;
+	color: var(--fg);
+}
+.content-wrapper {
+	background: var(--bg);
+	min-height: 100vh;
 }
 
 /* Cards */

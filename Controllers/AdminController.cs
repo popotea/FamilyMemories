@@ -142,6 +142,38 @@ namespace FamilyMemories.Controllers
         }
 
         [HttpGet]
+        public IActionResult CreateUser()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateUser(UserCreateViewModel model)
+        {
+            if (!ModelState.IsValid) return View(model);
+
+            var user = new ApplicationUser
+            {
+                UserName = model.UserName,
+                Email = model.Email,
+                FullName = model.FullName ?? model.UserName,
+                EmailConfirmed = true
+            };
+
+            var result = await _userManager.CreateAsync(user, model.Password);
+            if (result.Succeeded)
+            {
+                return RedirectToAction(nameof(Users));
+            }
+
+            foreach (var err in result.Errors)
+                ModelState.AddModelError(string.Empty, err.Description);
+
+            return View(model);
+        }
+
+        [HttpGet]
         public async Task<IActionResult> EditUserRoles(string id)
         {
             if (string.IsNullOrEmpty(id)) return NotFound();

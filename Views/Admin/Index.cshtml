@@ -1,13 +1,12 @@
 ﻿@model IEnumerable<FamilyMemories.Models.Memory>
 
 @{
-    ViewData["Title"] = "Memories Maintenance";
+    ViewData["Title"] = "";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
 <div class="admin-card">
-    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
-        <h3 class="mb-2">回憶管理（列表檢視）</h3>
+    <div class="d-flex justify-content-end align-items-center mb-3 flex-wrap">
         <div class="admin-controls">
             <input id="searchInput" class="form-control form-control-sm search-input" placeholder="搜尋標題或描述" />
             <select id="pageSize" class="form-select form-select-sm ms-2" style="width:auto;">

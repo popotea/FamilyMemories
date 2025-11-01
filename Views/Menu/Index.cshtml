@@ -1,0 +1,42 @@
+@model IEnumerable<FamilyMemories.Models.Menu>
+@{
+    ViewData["Title"] = "選單維護";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="admin-card">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>選單維護</h3>
+        <a asp-action="Create" class="btn btn-primary">新增主選單</a>
+    </div>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>名稱</th>
+                <th>連結</th>
+                <th>父選單</th>
+                <th>排序</th>
+                <th>啟用</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var m in Model)
+        {
+            <tr>
+                <td>@m.Title</td>
+                <td>@m.Url</td>
+                <td>@m.ParentId</td>
+                <td>@m.SortOrder</td>
+                <td>@(m.IsActive ? "是" : "否")</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@m.Id" class="btn btn-sm btn-outline-secondary">編輯</a>
+                    <form asp-action="Delete" asp-route-id="@m.Id" method="post" style="display:inline">
+                        <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('確定要刪除？');">刪除</button>
+                    </form>
+                    <a asp-action="Create" asp-route-parentId="@m.Id" class="btn btn-sm btn-outline-primary">新增子選單</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
