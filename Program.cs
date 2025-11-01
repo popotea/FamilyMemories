@@ -119,6 +119,10 @@ app.Use(async (context, next) =>
 
 // MVC routing first
 app.MapControllerRoute(
+    name: "areas",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}"); // Home page shows gallery
 
@@ -127,11 +131,5 @@ app.MapGet("/popo/login", () => Results.Redirect("/Identity/Account/Login"));
 
 // Keep Razor Pages for Identity pages (login, register, etc.)
 app.MapRazorPages();
-
-// Catch-all route to redirect any other URL to the home page
-app.MapControllerRoute(
-    name: "catch-all",
-    pattern: "{*url}",
-    defaults: new { controller = "Home", action = "Index" });
 
 app.Run();

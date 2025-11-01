@@ -27,5 +27,8 @@ namespace FamilyMemories.Models.ViewModels.Admin
         [DataType(DataType.Password)]
         [Display(Name = "確認密碼")]
         public string ConfirmPassword { get; set; }
+
+        [Display(Name = "啟用")]
+        public bool IsActive { get; set; } = true;
     }
 }

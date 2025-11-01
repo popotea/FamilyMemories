@@ -106,26 +106,53 @@ namespace FamilyMemories.Controllers.Api
         // PUT: api/memories/5
         [HttpPut("{id}")]
         [Authorize]
-        public async Task<IActionResult> UpdateMemory(int id, MemoryUpdateDto memoryDto)
+        public async Task<ActionResult<MemoryDto>> UpdateMemory(int id, [FromForm] string title, [FromForm] string description, [FromForm] IFormFile file)
         {
-            if (id != memoryDto.Id)
-            {
-                return BadRequest();
-            }
-
             var memory = await _context.Memories.FindAsync(id);
             if (memory == null)
             {
                 return NotFound();
             }
 
-            memory.Title = memoryDto.Title;
-            memory.Description = memoryDto.Description;
-            memory.Date = memoryDto.Date;
+            // 更新標題和描述
+            memory.Title = title;
+            memory.Description = description;
 
-            if (!string.IsNullOrEmpty(memoryDto.ImagePath))
+            // 如果有上傳新圖片，處理圖片上傳
+            if (file != null && file.Length > 0)
             {
-                memory.ImagePath = memoryDto.ImagePath;
+                // 驗證檔案大小
+                if (file.Length > MaxFileSize)
+                    return BadRequest(new { error = $"檔案大小超過 {MaxFileSize / 1024 / 1024} MB 限制" });
+
+                // 驗證副檔名
+                var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
+                if (string.IsNullOrEmpty(ext) || !AllowedExtensions.Contains(ext))
+                    return BadRequest(new { error = "只允許圖片檔案 (.jpg, .jpeg, .png, .gif, .webp)" });
+
+                var uploadsFolder = Path.Combine(_env.WebRootPath, "uploads");
+                if (!Directory.Exists(uploadsFolder)) Directory.CreateDirectory(uploadsFolder);
+
+                // 刪除舊圖片（如果存在）
+                if (!string.IsNullOrEmpty(memory.ImagePath))
+                {
+                    var oldFilePath = Path.Combine(uploadsFolder, memory.ImagePath);
+                    if (System.IO.File.Exists(oldFilePath))
+                    {
+                        System.IO.File.Delete(oldFilePath);
+                    }
+                }
+
+                // 儲存新圖片
+                var fileName = $"{Guid.NewGuid()}{ext}";
+                var filePath = Path.Combine(uploadsFolder, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+
+                memory.ImagePath = fileName;
             }
 
             try
@@ -144,7 +171,17 @@ namespace FamilyMemories.Controllers.Api
                 }
             }
 
-            return NoContent();
+            // 回傳更新後的資料
+            var resultDto = new MemoryDto
+            {
+                Id = memory.Id,
+                Title = memory.Title,
+                Description = memory.Description,
+                Date = memory.Date,
+                ImagePath = memory.ImagePath
+            };
+
+            return Ok(resultDto);
         }
 
         // DELETE: api/memories/5

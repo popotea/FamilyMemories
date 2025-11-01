@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\AI\\FamilyMemories\\FamilyMemories.csproj": {}
+    "C:\\code\\FamilyMemories\\FamilyMemories\\FamilyMemories.csproj": {}
   },
   "projects": {
-    "C:\\AI\\FamilyMemories\\FamilyMemories.csproj": {
+    "C:\\code\\FamilyMemories\\FamilyMemories\\FamilyMemories.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\AI\\FamilyMemories\\FamilyMemories.csproj",
+        "projectUniqueName": "C:\\code\\FamilyMemories\\FamilyMemories\\FamilyMemories.csproj",
         "projectName": "FamilyMemories",
-        "projectPath": "C:\\AI\\FamilyMemories\\FamilyMemories.csproj",
+        "projectPath": "C:\\code\\FamilyMemories\\FamilyMemories\\FamilyMemories.csproj",
         "packagesPath": "C:\\Users\\powel\\.nuget\\packages\\",
-        "outputPath": "C:\\AI\\FamilyMemories\\obj\\",
+        "outputPath": "C:\\code\\FamilyMemories\\FamilyMemories\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -26,7 +26,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "E:\\NugetPackages": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {

@@ -107,6 +107,15 @@
  <li class="nav-item">
  <a class="nav-link" asp-controller="Admin" asp-action="Roles"><i class="bi bi-shield-lock me-2"></i><p>角色管理</p></a>
  </li>
+ @if (User.IsInRole("Admin"))
+ {
+ <li class="nav-item">
+ <a class="nav-link" asp-area="Admin" asp-controller="RoleManager" asp-action="Index"><i class="bi bi-shield-check me-2"></i><p>角色權限管理</p></a>
+ </li>
+ <li class="nav-item">
+ <a class="nav-link" asp-area="Admin" asp-controller="UserManager" asp-action="Index"><i class="bi bi-person-badge me-2"></i><p>使用者權限管理</p></a>
+ </li>
+ }
  <li class="nav-item">
  <a class="nav-link" asp-controller="Menu" asp-action="Index"><i class="bi bi-menu-button-wide me-2"></i><p>選單維護</p></a>
  </li>

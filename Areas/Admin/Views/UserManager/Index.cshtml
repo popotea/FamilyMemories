@@ -1,0 +1,40 @@
+@model IEnumerable<FamilyMemories.Models.ApplicationUser>
+@{
+    ViewData["Title"] = "使用者權限管理";
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<h2>使用者權限管理</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>帳號</th>
+            <th>姓名</th>
+            <th>啟用</th>
+            <th>權限數量</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var user in Model)
+    {
+        <tr>
+            <td>@user.UserName</td>
+            <td>@user.FullName</td>
+            <td>@(user.IsActive ? "是" : "否")</td>
+            <td>@user.UserPermissions.Count</td>
+            <td>
+                <a asp-action="EditPermissions" asp-route-id="@user.Id" class="btn btn-primary btn-sm">編輯權限</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

@@ -135,7 +135,8 @@ namespace FamilyMemories.Controllers
                     UserId = user.Id,
                     UserName = user.UserName,
                     Email = user.Email,
-                    Roles = roles
+                    Roles = roles,
+                    IsActive = user.IsActive
                 });
             }
             return View(model);
@@ -158,7 +159,8 @@ namespace FamilyMemories.Controllers
                 UserName = model.UserName,
                 Email = model.Email,
                 FullName = model.FullName ?? model.UserName,
-                EmailConfirmed = true
+                EmailConfirmed = true,
+                IsActive = model.IsActive
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);
@@ -230,6 +232,29 @@ namespace FamilyMemories.Controllers
                     ModelState.AddModelError(string.Empty, "Could not add roles to user.");
                     return View(model);
                 }
+            }
+
+            return RedirectToAction(nameof(Users));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ToggleUserStatus(string id)
+        {
+            if (string.IsNullOrEmpty(id)) return BadRequest();
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null) return NotFound();
+
+            user.IsActive = !user.IsActive;
+            var result = await _userManager.UpdateAsync(user);
+            
+            if (result.Succeeded)
+            {
+                TempData["Success"] = $"使用者 {user.UserName} 已{(user.IsActive ? "啟用" : "停用")}";
+            }
+            else
+            {
+                TempData["Error"] = "更新使用者狀態失敗";
             }
 
             return RedirectToAction(nameof(Users));

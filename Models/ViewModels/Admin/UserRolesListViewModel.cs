@@ -8,5 +8,6 @@ namespace FamilyMemories.Models.ViewModels.Admin
  public string UserName { get; set; }
  public string Email { get; set; }
  public IList<string> Roles { get; set; }
+ public bool IsActive { get; set; }
  }
 }

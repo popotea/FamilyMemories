@@ -1,4 +1,5 @@
 using FamilyMemories.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -6,10 +7,32 @@ namespace FamilyMemories.Data
 {
     public static class DatabaseInitializer
     {
+        /// <summary>
+        /// 修正 AspNetUsers.UserPermissions 與 AspNetRoles.RolePermissions 欄位內容，將 null 或空字串設為 '[]'
+        /// </summary>
+        public static void FixPermissionsJsonFields(ApplicationDbContext context)
+        {
+            // 修正 AspNetUsers.UserPermissions 欄位
+            context.Database.ExecuteSqlRaw(@"
+                UPDATE AspNetUsers
+                SET UserPermissions = '[]'
+                WHERE UserPermissions IS NULL OR TRIM(UserPermissions) = ''
+            ");
+
+            // 修正 AspNetRoles.RolePermissions 欄位
+            context.Database.ExecuteSqlRaw(@"
+                UPDATE AspNetRoles
+                SET RolePermissions = '[]'
+                WHERE RolePermissions IS NULL OR TRIM(RolePermissions) = ''
+            ");
+        }
         public static async Task SeedUsersAndRoles(IServiceProvider serviceProvider)
         {
             var roleManager = serviceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
             var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var context = serviceProvider.GetRequiredService<ApplicationDbContext>();
+            // 啟動時自動修正權限欄位內容
+            FixPermissionsJsonFields(context);
 
             // 確保角色存在
             var roles = new[] { "Admin", "User", "Guest" };
@@ -29,6 +52,7 @@ namespace FamilyMemories.Data
             // 創建預設管理員帳號 (admin/a123456)
             var adminEmail = "admin";
             var admin = await userManager.FindByNameAsync(adminEmail);
+            var allPermissions = Enum.GetValues(typeof(Permission)).Cast<Permission>().ToList();
             if (admin == null)
             {
                 admin = new ApplicationUser
@@ -37,7 +61,8 @@ namespace FamilyMemories.Data
                     Email = "admin@family.com",
                     FullName = "系統管理員",
                     AvatarPath = "/images/default-avatar.png", // 預設頭像路徑
-                    EmailConfirmed = true
+                    EmailConfirmed = true,
+                    UserPermissions = allPermissions
                 };
 
                 var result = await userManager.CreateAsync(admin, "a123456");
@@ -45,8 +70,6 @@ namespace FamilyMemories.Data
                 {
                     // 確保管理員獲得 Admin 角色
                     await userManager.AddToRoleAsync(admin, "Admin");
-
-                    // 創建更多預設角色權限演示
                     await userManager.AddToRoleAsync(admin, "User"); // 管理員同時擁有用戶權限
                 }
                 else
@@ -64,6 +87,9 @@ namespace FamilyMemories.Data
                 // 更新密碼，以防萬一
                 var token = await userManager.GeneratePasswordResetTokenAsync(admin);
                 var result = await userManager.ResetPasswordAsync(admin, token, "a123456");
+                // 確保 admin 權限補齊
+                admin.UserPermissions = allPermissions;
+                await userManager.UpdateAsync(admin);
                 if (!result.Succeeded)
                 {
                     Console.WriteLine("Failed to update admin password:");
@@ -74,7 +100,7 @@ namespace FamilyMemories.Data
                 }
                 else
                 {
-                    Console.WriteLine("Updated admin password");
+                    Console.WriteLine("Updated admin password and permissions");
                 }
             }
         }

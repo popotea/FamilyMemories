@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FamilyMemories")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8cefa6230f41b7c78a31ee73c6b2ae8ddc819fb8")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c03ae7b807494ce352d00405dc6ae5dd45c911aa")]
 [assembly: System.Reflection.AssemblyProductAttribute("FamilyMemories")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FamilyMemories")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
