@@ -873,4 +873,3 @@ C:\code\FamilyMemories\FamilyMemories\obj\Debug\net8.0\refint\FamilyMemories.dll
 C:\code\FamilyMemories\FamilyMemories\obj\Debug\net8.0\FamilyMemories.pdb
 C:\code\FamilyMemories\FamilyMemories\obj\Debug\net8.0\FamilyMemories.genruntimeconfig.cache
 C:\code\FamilyMemories\FamilyMemories\obj\Debug\net8.0\ref\FamilyMemories.dll
-C:\code\FamilyMemories\FamilyMemories\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
