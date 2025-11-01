@@ -120,100 +120,36 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/code/FamilyMemories/FamilyMemories/Views.bak/Admin/CreateRole.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MuYmFrXEFkbWluXENyZWF0ZVJvbGUuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/code/FamilyMemories/FamilyMemories/Views.bak/Admin/CreateUser.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MuYmFrXEFkbWluXENyZWF0ZVVzZXIuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/code/FamilyMemories/FamilyMemories/Views.bak/Admin/EditRole.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MuYmFrXEFkbWluXEVkaXRSb2xlLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/code/FamilyMemories/FamilyMemories/Views.bak/Admin/EditUserRoles.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MuYmFrXEFkbWluXEVkaXRVc2VyUm9sZXMuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/code/FamilyMemories/FamilyMemories/Views.bak/Admin/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MuYmFrXEFkbWluXEluZGV4LmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/code/FamilyMemories/FamilyMemories/Views.bak/Admin/RoleManager/EditPermissions.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MuYmFrXEFkbWluXFJvbGVNYW5hZ2VyXEVkaXRQZXJtaXNzaW9ucy5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/code/FamilyMemories/FamilyMemories/Views.bak/Admin/RoleManager/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MuYmFrXEFkbWluXFJvbGVNYW5hZ2VyXEluZGV4LmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/code/FamilyMemories/FamilyMemories/Views.bak/Admin/Roles.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MuYmFrXEFkbWluXFJvbGVzLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/code/FamilyMemories/FamilyMemories/Views.bak/Admin/UserManager/EditPermissions.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MuYmFrXEFkbWluXFVzZXJNYW5hZ2VyXEVkaXRQZXJtaXNzaW9ucy5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/code/FamilyMemories/FamilyMemories/Views.bak/Admin/UserManager/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MuYmFrXEFkbWluXFVzZXJNYW5hZ2VyXEluZGV4LmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/code/FamilyMemories/FamilyMemories/Views.bak/Admin/Users.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MuYmFrXEFkbWluXFVzZXJzLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/code/FamilyMemories/FamilyMemories/Views.bak/Admin/_ViewImports.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MuYmFrXEFkbWluXF9WaWV3SW1wb3J0cy5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/code/FamilyMemories/FamilyMemories/Views.bak/Admin/_ViewStart.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MuYmFrXEFkbWluXF9WaWV3U3RhcnQuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/code/FamilyMemories/FamilyMemories/Views.bak/Home/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MuYmFrXEhvbWVcSW5kZXguY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/code/FamilyMemories/FamilyMemories/Views.bak/Menu/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MuYmFrXE1lbnVcQ3JlYXRlLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/code/FamilyMemories/FamilyMemories/Views.bak/Menu/Edit.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MuYmFrXE1lbnVcRWRpdC5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/code/FamilyMemories/FamilyMemories/Views.bak/Menu/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MuYmFrXE1lbnVcSW5kZXguY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/code/FamilyMemories/FamilyMemories/Views.bak/Shared/_AdminLayout.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MuYmFrXFNoYXJlZFxfQWRtaW5MYXlvdXQuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/code/FamilyMemories/FamilyMemories/Views.bak/Shared/_Layout.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MuYmFrXFNoYXJlZFxfTGF5b3V0LmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/code/FamilyMemories/FamilyMemories/Views.bak/_ViewImports.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3MuYmFrXF9WaWV3SW1wb3J0cy5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/code/FamilyMemories/FamilyMemories/Views/Memories/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVtb3JpZXNcQ3JlYXRlLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/code/FamilyMemories/FamilyMemories/Views/Memories/Delete.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVtb3JpZXNcRGVsZXRlLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/code/FamilyMemories/FamilyMemories/Views/Memories/Edit.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVtb3JpZXNcRWRpdC5jc2h0bWw=
+[C:/code/FamilyMemories/FamilyMemories/Views/Home/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/code/FamilyMemories/FamilyMemories/Views/Memories/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVtb3JpZXNcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/code/FamilyMemories/FamilyMemories/Views/Menu/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVudVxDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/code/FamilyMemories/FamilyMemories/Views/Menu/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVudVxFZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/code/FamilyMemories/FamilyMemories/Views/Menu/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVudVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/code/FamilyMemories/FamilyMemories/Views/Shared/_AdminLayout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9BZG1pbkxheW91dC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/code/FamilyMemories/FamilyMemories/Views/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/code/FamilyMemories/FamilyMemories/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/code/FamilyMemories/FamilyMemories/Pages/Shared/_Layout.cshtml]
