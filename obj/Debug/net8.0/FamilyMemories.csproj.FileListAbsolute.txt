@@ -860,7 +860,6 @@ C:\code\FamilyMemories\FamilyMemories\obj\Debug\net8.0\FamilyMemories.sourcelink
 C:\code\FamilyMemories\FamilyMemories\obj\Debug\net8.0\rjimswa.dswa.cache.json
 C:\code\FamilyMemories\FamilyMemories\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
 C:\code\FamilyMemories\FamilyMemories\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
-C:\code\FamilyMemories\FamilyMemories\obj\Debug\net8.0\scopedcss\Pages\Shared\_Layout.cshtml.rz.scp.css
 C:\code\FamilyMemories\FamilyMemories\obj\Debug\net8.0\scopedcss\bundle\FamilyMemories.styles.css
 C:\code\FamilyMemories\FamilyMemories\obj\Debug\net8.0\scopedcss\projectbundle\FamilyMemories.bundle.scp.css
 C:\code\FamilyMemories\FamilyMemories\obj\Debug\net8.0\staticwebassets.build.json
@@ -873,3 +872,4 @@ C:\code\FamilyMemories\FamilyMemories\obj\Debug\net8.0\refint\FamilyMemories.dll
 C:\code\FamilyMemories\FamilyMemories\obj\Debug\net8.0\FamilyMemories.pdb
 C:\code\FamilyMemories\FamilyMemories\obj\Debug\net8.0\FamilyMemories.genruntimeconfig.cache
 C:\code\FamilyMemories\FamilyMemories\obj\Debug\net8.0\ref\FamilyMemories.dll
+C:\code\FamilyMemories\FamilyMemories\obj\Debug\net8.0\scopedcss\Views\Shared\_RazorPagesLayout.cshtml.rz.scp.css
