@@ -1,16 +1,138 @@
-@model IEnumerable<FamilyMemories.Models.Memory>
-
 @{
-    ViewData["Title"] = "";
-    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "後台管理";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<div class="admin-card">
-    ...existing code...
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">儀表板</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-end">
+                    <li class="breadcrumb-item"><a href="#">首頁</a></li>
+                    <li class="breadcrumb-item active">儀表板</li>
+                </ol>
+            </div>
+        </div>
+    </div>
 </div>
 
-@section Scripts {
-<script>
-// ...existing code...
-</script>
-}
+<div class="content">
+    <div class="container-fluid">
+        <!-- 統計卡片 -->
+        <div class="row">
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3>@ViewBag.Stats.TotalUsers</h3>
+                        <p>總使用者數</p>
+                    </div>
+                    <div class="icon">
+                        <i class="bi bi-people"></i>
+                    </div>
+                    <a href="/Admin/UserManager" class="small-box-footer">
+                        更多資訊 <i class="bi bi-arrow-right-circle"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-success">
+                    <div class="inner">
+                        <h3>@ViewBag.Stats.ActiveUsers</h3>
+                        <p>啟用中的使用者</p>
+                    </div>
+                    <div class="icon">
+                        <i class="bi bi-person-check"></i>
+                    </div>
+                    <a href="/Admin/UserManager" class="small-box-footer">
+                        更多資訊 <i class="bi bi-arrow-right-circle"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-warning">
+                    <div class="inner">
+                        <h3>@ViewBag.Stats.TotalMemories</h3>
+                        <p>回憶總數</p>
+                    </div>
+                    <div class="icon">
+                        <i class="bi bi-images"></i>
+                    </div>
+                    <a href="/Admin/Admin/Memories" class="small-box-footer">
+                        更多資訊 <i class="bi bi-arrow-right-circle"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-danger">
+                    <div class="inner">
+                        <h3>@ViewBag.Stats.TotalRoles</h3>
+                        <p>角色總數</p>
+                    </div>
+                    <div class="icon">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+                    <a href="/Admin/RoleManager" class="small-box-footer">
+                        更多資訊 <i class="bi bi-arrow-right-circle"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 快速連結 -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">快速功能</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <a href="/Admin/UserManager" class="btn btn-app w-100">
+                                    <i class="bi bi-people"></i> 使用者管理
+                                </a>
+                            </div>
+                            <div class="col-md-3">
+                                <a href="/Admin/RoleManager" class="btn btn-app w-100">
+                                    <i class="bi bi-shield"></i> 角色管理
+                                </a>
+                            </div>
+                            <div class="col-md-3">
+                                <a href="/Admin/Admin/Memories" class="btn btn-app w-100">
+                                    <i class="bi bi-images"></i> 回憶管理
+                                </a>
+                            </div>
+                            <div class="col-md-3">
+                                <a href="/" class="btn btn-app w-100">
+                                    <i class="bi bi-house"></i> 返回前台
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 系統資訊 -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">系統資訊</h3>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>系統名稱：</strong>家庭回憶管理系統</p>
+                        <p><strong>版本：</strong>1.0.0</p>
+                        <p><strong>ASP.NET Core：</strong>.NET 8.0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

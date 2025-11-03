@@ -25,13 +25,14 @@ namespace FamilyMemories.Pages.Identity.Account
         {
             await _signInManager.SignOutAsync();
             _logger.LogInformation("User logged out.");
-            if (returnUrl != null)
+            if (!string.IsNullOrEmpty(returnUrl))
             {
                 return LocalRedirect(returnUrl);
             }
             else
             {
-                return RedirectToPage();
+                // 預設導向首頁
+                return LocalRedirect("~/");
             }
         }
     }

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FamilyMemories")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+948567a2796caadb4f6d1a409ac11feea35df49d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3cfbd5be13311144989fc97145962c312e2cd527")]
 [assembly: System.Reflection.AssemblyProductAttribute("FamilyMemories")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FamilyMemories")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

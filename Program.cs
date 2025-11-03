@@ -92,9 +92,13 @@ app.Use(async (context, next) =>
         "/Identity/Account/ResetPassword"
     };
 
-    // 如果是靜態資源、API GET請求，始終允許
-    if (path.StartsWith("/lib/") || path.StartsWith("/css/") || path.StartsWith("/js/") ||
-        context.Request.Method == "GET" && path.StartsWith("/api/memories"))
+    // 如果是靜態資源、API、或 Admin 區域，交由授權處理
+    if (path.StartsWith("/lib/", StringComparison.OrdinalIgnoreCase) || 
+        path.StartsWith("/css/", StringComparison.OrdinalIgnoreCase) || 
+        path.StartsWith("/js/", StringComparison.OrdinalIgnoreCase) ||
+        path.StartsWith("/uploads/", StringComparison.OrdinalIgnoreCase) ||
+        path.StartsWith("/api/", StringComparison.OrdinalIgnoreCase) ||
+        path.StartsWith("/Admin", StringComparison.OrdinalIgnoreCase))
     {
         await next();
         return;
@@ -117,14 +121,15 @@ app.Use(async (context, next) =>
     await next();
 });
 
-// MVC routing first
+// Area routing (Admin backend)
 app.MapControllerRoute(
     name: "areas",
-    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+    pattern: "{area:exists}/{controller=Admin}/{action=Index}/{id?}");
 
+// Default MVC routing (Frontend)
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}"); // Home page shows gallery
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 // 自定義登入路由：/popo/login 映射到標準登入頁面
 app.MapGet("/popo/login", () => Results.Redirect("/Identity/Account/Login"));

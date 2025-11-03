@@ -45,12 +45,17 @@ namespace FamilyMemories.Controllers
                 UserId = m.ApplicationUserId
             }).ToList();
 
+            // 取得當前使用者 ID，如果未登入則為 null
+            var currentUserId = User?.Identity?.IsAuthenticated == true 
+                ? _userManager.GetUserId(User) 
+                : null;
+
             var viewModel = new IndexViewModel
             {
                 WelcomeMessage = "歡迎使用家庭回憶相簿",
                 AppDescription = "記錄您最珍貴的家庭時刻",
                 Photos = photos,
-                CurrentUserId = _userManager.GetUserId(User)
+                CurrentUserId = currentUserId
             };
 
             return View(viewModel);
