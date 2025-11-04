@@ -1,5 +1,44 @@
-// Home Gallery - 前台相片瀏覽功能
+﻿// Home Gallery - 前台相片瀏覽功能
 $(document).ready(function() {
+    // Toast 訊息顯示
+    function showToast(msg, type = 'info', duration = 2200) {
+        const $toast = $('#toast');
+        $('#toastMsg').text(msg);
+        $toast.css('background', type === 'success' ? '#28a745' : (type === 'error' ? '#dc3545' : '#222'));
+        $toast.fadeIn(180);
+        setTimeout(() => $toast.fadeOut(300), duration);
+    }
+
+    // 上傳拖曳區互動
+    const $dropZone = $('#uploadDropZone');
+    const $addImage = $('#addImage');
+    const $addPreview = $('#addPreview');
+    if ($dropZone.length) {
+        $dropZone.on('click', function() { $addImage.trigger('click'); });
+        $dropZone.on('dragover', function(e) { e.preventDefault(); $dropZone.addClass('dragover'); });
+        $dropZone.on('dragleave', function(e) { e.preventDefault(); $dropZone.removeClass('dragover'); });
+        $dropZone.on('drop', function(e) {
+            e.preventDefault(); $dropZone.removeClass('dragover');
+            if (e.originalEvent.dataTransfer.files.length > 0) {
+                $addImage[0].files = e.originalEvent.dataTransfer.files;
+                $addImage.trigger('change');
+            }
+        });
+        $addImage.on('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    $addPreview.attr('src', e.target.result).show();
+                };
+                reader.readAsDataURL(file);
+                $('#uploadDropText').hide();
+            } else {
+                $addPreview.hide();
+                $('#uploadDropText').show();
+            }
+        });
+    }
     // ---- 主題：載入與切換 ----
     const THEME_KEY = 'theme';
     
@@ -55,9 +94,12 @@ $(document).ready(function() {
     const isAdmin = window.isAdmin || false;
     const currentUserId = window.currentUserId || '';
 
-    // 初始化編輯按鈕狀態
+    // 初始化編輯按鈕狀態 - 確保未登入時不會顯示
     if (!isAuthenticated) {
-        $('#modalEditBtn').hide();
+        $('#modalEditBtn').remove(); // 直接移除，因為不應該存在
+      $('#addMemoryBtn').remove();
+        $('#editModal').remove();
+        $('#addModal').remove();
     }
 
     let currentFilter = 'all';
@@ -104,49 +146,54 @@ $(document).ready(function() {
     // 渲染相片網格
     function renderGallery() {
         filteredPhotos = currentFilter === 'all'
-            ? photos
-            : photos.filter(p => p.member === currentFilter);
+? photos
+    : photos.filter(p => p.member === currentFilter);
 
-        const gallery = $('#galleryGrid');
-        gallery.empty();
+    const gallery = $('#galleryGrid');
+      gallery.empty();
 
         if (filteredPhotos.length === 0) {
-            $('#emptyState').show();
-            return;
-        }
+        $('#emptyState').show();
+       return;
+   }
 
-        $('#emptyState').hide();
+     $('#emptyState').hide();
 
-        filteredPhotos.forEach((photo, index) => {
-            const imgUrl = resolveImageUrl(photo.imageUrl);
+    filteredPhotos.forEach((photo, index) => {
+      const imgUrl = resolveImageUrl(photo.imageUrl);
 
-            let cardHtml = `
-                <div class="photo-card" data-index="${index}">
-                    <img src="${imgUrl}" alt="${photo.title}">
-                    <div class="photo-overlay"></div>
-                    <div class="photo-info">
-                        <div class="photo-tags">
-                            <span class="photo-member">${photo.member}</span>
-                            <span class="photo-date">${photo.date}</span>
-                        </div>
-                        <h3 class="photo-title">${photo.title}</h3>
-                        <p class="photo-description">${photo.description}</p>
-                    </div>
-                    ${(isAuthenticated && (photo.userId === currentUserId || isAdmin)) ? `<button class="edit-btn" data-id="${photo.id}" title="編輯回憶"><svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></button>` : ''}
-                </div>
-            `;
+     // 權限檢查：只有登入且（是自己的照片或管理員）才顯示編輯按鈕
+  const canEdit = isAuthenticated && (photo.userId === currentUserId || isAdmin);
+            
+      let cardHtml = `
+          <div class="photo-card" data-index="${index}">
+   <img src="${imgUrl}" alt="${photo.title}">
+    <div class="photo-overlay"></div>
+          <div class="photo-info">
+            <div class="photo-tags">
+     <span class="photo-member">${photo.member}</span>
+       <span class="photo-date">${photo.date}</span>
+          </div>
+ <h3 class="photo-title">${photo.title}</h3>
+      <p class="photo-description">${photo.description}</p>
+        </div>
+       ${canEdit ? `<button class="edit-btn" data-id="${photo.id}" title="編輯回憶"><svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></button>` : ''}
+         </div>
+    `;
 
             const card = $(cardHtml);
 
             card.on('click', function(e) {
-                if ($(e.target).closest('.edit-btn').length) {
-                    openEditModal($(e.target).closest('.edit-btn').data('id'));
-                } else {
-                    openModal($(this).data('index'));
-                }
-            });
+        // 權限檢查：只有在已登入且有權限時才能開啟編輯
+              if ($(e.target).closest('.edit-btn').length && canEdit) {
+         e.stopPropagation();
+  openEditModal($(e.target).closest('.edit-btn').data('id'));
+        } else {
+     openModal($(this).data('index'));
+           }
+       });
 
-            gallery.append(card);
+     gallery.append(card);
         });
     }
 
@@ -166,21 +213,23 @@ $(document).ready(function() {
 
     // 更新 Modal 內容
     function updateModal() {
-        const photo = filteredPhotos[currentPhotoIndex];
+      const photo = filteredPhotos[currentPhotoIndex];
         const imgUrl = resolveImageUrl(photo.imageUrl);
         $('#modalImage').attr('src', imgUrl).attr('alt', photo.title);
-        $('#modalMember').text(photo.member);
-        $('#modalDate').text(photo.date);
+      $('#modalMember').text(photo.member);
+  $('#modalDate').text(photo.date);
         $('#modalTitle').text(photo.title);
         $('#modalDescription').text(photo.description);
-        $('#modalCounter').text(`#${currentPhotoIndex + 1} / ${filteredPhotos.length}`);
+   $('#modalCounter').text(`#${currentPhotoIndex + 1} / ${filteredPhotos.length}`);
 
-        // 控制「編輯」按鈕顯示 - 必須登入且（是自己的照片或是管理員）
-        const canEdit = isAuthenticated && (photo.userId === currentUserId || isAdmin);
+      // 控制「編輯」按鈕顯示 - 必須登入且（是自己的照片或是管理員）
+     if (isAuthenticated) {
+            const canEdit = (photo.userId === currentUserId || isAdmin);
         if (canEdit) {
-            $('#modalEditBtn').show();
-        } else {
-            $('#modalEditBtn').hide();
+        $('#modalEditBtn').show();
+      } else {
+           $('#modalEditBtn').hide();
+            }
         }
     }
 
@@ -221,134 +270,151 @@ $(document).ready(function() {
         }
     });
 
-    // Add Memory Modal
-    $('#addMemoryBtn').on('click', function() {
+    // Add Memory Modal - 確保未登入時不會執行
+    if (isAuthenticated) {
+        $('#addMemoryBtn').on('click', function() {
         $('#addModal').addClass('active');
-        $('body').css('overflow', 'hidden');
-    });
-
-    $('#addModalClose').on('click', closeAddModal);
-
-    function closeAddModal() {
-        $('#addModal').removeClass('active');
-        $('body').css('overflow', 'auto');
-    }
-
-    $('#addModal').on('click', function(e) {
-        if (e.target === this) {
-            closeAddModal();
-        }
-    });
-
-    $('#addForm').on('submit', function(e) {
-        e.preventDefault();
-        const formData = new FormData();
-        formData.append('title', $('#addTitle').val());
-        formData.append('description', $('#addDescription').val());
-        formData.append('date', $('#addDate').val());
-        formData.append('file', $('#addImage')[0].files[0]);
-
-        $.ajax({
-            url: '/api/memories',
-            type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function(newMemory) {
-                location.reload();
-            },
-            error: function(xhr) {
-                alert('新增失敗: ' + (xhr.responseText || '請稍後再試'));
-            }
-        });
-    });
-
-    // Edit Modal
-    function openEditModal(photoId) {
-        // 權限檢查：未登入時不允許開啟編輯 modal
-        if (!isAuthenticated) {
-            return;
-        }
-
-        const photo = photos.find(p => p.id === photoId);
-        if (photo) {
-            // 再次檢查權限：必須是自己的照片或是管理員
-            const canEdit = (photo.userId === currentUserId || isAdmin);
-            if (!canEdit) {
-                return;
-            }
-
-            $('#editPhotoId').val(photo.id);
-            $('#editTitle').val(photo.title);
-            $('#editDescription').val(photo.description);
-            $('#editCurrentImage').attr('src', resolveImageUrl(photo.imageUrl));
-            $('#editImage').val('');
-            $('#editModal').addClass('active');
             $('body').css('overflow', 'hidden');
-        }
-    }
+     });
 
-    function closeEditModal() {
-        $('#editModal').removeClass('active');
-        $('body').css('overflow', 'auto');
-    }
+        $('#addModalClose').on('click', closeAddModal);
 
-    $('#editModalClose').on('click', closeEditModal);
-
-    $('#editModal').on('click', function(e) {
-        if (e.target === this) {
-            closeEditModal();
-        }
-    });
-
-    $('#editForm').on('submit', function(e) {
-        e.preventDefault();
-        const photoId = $('#editPhotoId').val();
-        const formData = new FormData();
-        formData.append('title', $('#editTitle').val());
-        formData.append('description', $('#editDescription').val());
-        
-        const imageFile = $('#editImage')[0].files[0];
-        if (imageFile) {
-            formData.append('file', imageFile);
+        function closeAddModal() {
+         $('#addModal').removeClass('active');
+     $('body').css('overflow', 'auto');
         }
 
-        $.ajax({
-            url: `/api/memories/${photoId}`,
-            type: 'PUT',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function(updatedPhoto) {
-                const photoIndex = photos.findIndex(p => p.id == photoId);
-                if (photoIndex !== -1) {
-                    photos[photoIndex].title = updatedPhoto.title;
-                    photos[photoIndex].description = updatedPhoto.description;
-                    if (updatedPhoto.imageUrl) {
-                        photos[photoIndex].imageUrl = updatedPhoto.imageUrl;
-                    }
-                }
-                renderGallery();
-                closeEditModal();
-                if ($('#photoModal').hasClass('active')) {
-                    updateModal();
-                }
-            },
-            error: function(xhr) {
-                alert('更新失敗: ' + (xhr.responseText || '請稍後再試'));
-            }
+        $('#addModal').on('click', function(e) {
+            if (e.target === this) {
+              closeAddModal();
+          }
         });
-    });
 
-    // Modal 中的「編輯」按鈕行為
-    $('#modalEditBtn').on('click', function (e) {
-        e.preventDefault();
-        const photo = filteredPhotos[currentPhotoIndex];
-        if (!photo) return;
-        if (isAuthenticated && (photo.userId === currentUserId || isAdmin)) {
-            openEditModal(photo.id);
+        $('#addForm').on('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData();
+            formData.append('title', $('#addTitle').val());
+            formData.append('description', $('#addDescription').val());
+            formData.append('date', $('#addDate').val());
+            formData.append('file', $('#addImage')[0].files[0]);
+
+            // 顯示進度條
+            $('#addProgress').show();
+            $('#addProgressBar').css('width', '0%');
+            $('#addProgressText').text('上傳中...');
+
+            $.ajax({
+                url: '/api/memories',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                xhr: function() {
+                    var xhr = new window.XMLHttpRequest();
+                    xhr.upload.addEventListener('progress', function(evt) {
+                        if (evt.lengthComputable) {
+                            var percent = Math.round((evt.loaded / evt.total) * 100);
+                            $('#addProgressBar').css('width', percent + '%');
+                            $('#addProgressText').text('已上傳 ' + percent + '%');
+                        }
+                    }, false);
+                    return xhr;
+                },
+                success: function(newMemory) {
+                    showToast('新增成功！', 'success');
+                    setTimeout(function(){ location.reload(); }, 1200);
+                },
+                error: function(xhr) {
+                    showToast('新增失敗: ' + (xhr.responseText || '請稍後再試'), 'error', 3200);
+                    $('#addProgress').hide();
+                }
+            });
+        });
+    }
+
+    // Edit Modal - 確保未登入時不會執行
+    if (isAuthenticated) {
+    function openEditModal(photoId) {
+      const photo = photos.find(p => p.id === photoId);
+       if (photo) {
+ // 再次檢查權限：必須是自己的照片或是管理員
+                const canEdit = (photo.userId === currentUserId || isAdmin);
+     if (!canEdit) {
+  return;
+    }
+
+    $('#editPhotoId').val(photo.id);
+         $('#editTitle').val(photo.title);
+                $('#editDescription').val(photo.description);
+                $('#editCurrentImage').attr('src', resolveImageUrl(photo.imageUrl));
+      $('#editImage').val('');
+    $('#editModal').addClass('active');
+    $('body').css('overflow', 'hidden');
+            }
+    }
+
+        function closeEditModal() {
+   $('#editModal').removeClass('active');
+        $('body').css('overflow', 'auto');
+  }
+
+        $('#editModalClose').on('click', closeEditModal);
+
+      $('#editModal').on('click', function(e) {
+        if (e.target === this) {
+      closeEditModal();
+      }
+        });
+
+        $('#editForm').on('submit', function(e) {
+      e.preventDefault();
+       const photoId = $('#editPhotoId').val();
+  const formData = new FormData();
+            formData.append('title', $('#editTitle').val());
+            formData.append('description', $('#editDescription').val());
+     
+  const imageFile = $('#editImage')[0].files[0];
+       if (imageFile) {
+          formData.append('file', imageFile);
+ }
+
+    $.ajax({
+    url: `/api/memories/${photoId}`,
+        type: 'PUT',
+       data: formData,
+     processData: false,
+        contentType: false,
+                success: function(updatedPhoto) {
+    const photoIndex = photos.findIndex(p => p.id == photoId);
+              if (photoIndex !== -1) {
+     photos[photoIndex].title = updatedPhoto.title;
+           photos[photoIndex].description = updatedPhoto.description;
+              if (updatedPhoto.imageUrl) {
+       photos[photoIndex].imageUrl = updatedPhoto.imageUrl;
+    }
         }
-    });
+    renderGallery();
+           closeEditModal();
+            if ($('#photoModal').hasClass('active')) {
+        updateModal();
+    }
+           },
+           error: function(xhr) {
+  alert('更新失敗: ' + (xhr.responseText || '請稍後再試'));
+        }
+   });
+        });
+
+     // Modal 中的「編輯」按鈕行為
+  $('#modalEditBtn').on('click', function (e) {
+            e.preventDefault();
+          const photo = filteredPhotos[currentPhotoIndex];
+   if (!photo) return;
+    if (photo.userId === currentUserId || isAdmin) {
+  openEditModal(photo.id);
+    }
+        });
+ }
 
     // 初始化
     initFilters();

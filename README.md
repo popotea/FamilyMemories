@@ -142,3 +142,35 @@ public class Memory
 
 ## 聯絡方式
 如果有任何問題或建議，請在專案中提出 Issue 或 Pull Request。
+
+## Cloudflare R2 (S3 相容) 使用說明（範例）
+
+如果你想把圖片儲存在 Cloudflare R2（建議用於生產），以下是快速操作指南。
+
+1. 在 Cloudflare 後台建立 R2 bucket，記下 Bucket 名稱與 Account ID。
+2. 建立 Access Key / Secret Key（請妥善保管），不要把它們直接放入 Git。
+3. 在 `appsettings.Development.json` 設定 `CloudflareR2:ServiceUrl` 與 `CloudflareR2:Bucket`，但請把金鑰放到環境變數或 secret 管理器：
+
+   Windows PowerShell 範例（臨時環境變數，重啟終端會失效）：
+
+   ```powershell
+   $env:CloudflareR2__AccessKeyId = "<your-access-key>"
+   $env:CloudflareR2__SecretAccessKey = "<your-secret-key>"
+   ```
+
+   注意：在 .NET 中，`:` 在環境變數會被 `__` 取代（例如 `CloudflareR2:AccessKeyId`->`CloudflareR2__AccessKeyId`）。
+
+4. 本專案已實作 `IStorageService` 與 `CloudflareR2StorageService`，並在啟動時（Program.cs）若偵測到 cloud 設定就會自動註冊。
+
+5. 本機測試：啟動專案後可使用 Postman 或 curl 測試上傳：
+
+   - API: POST /api/memories
+   - 表單欄位 (form-data): title, description, date, file (type=file)
+
+6. 注意事項：
+   - 若尚未提供 Cloudflare R2 設定，應用會回落到本地 `wwwroot/uploads/`，保持向後相容。
+   - 若你使用私有 bucket，請將上傳改為不公開，並使用 `GeneratePresignedUrlAsync` 產生短期存取連結。
+
+7. 刪除：當你刪除記憶（DELETE /api/memories/{id}）時，系統會嘗試刪除對應的雲端物件或本地檔案。
+
+如果要我為你把 README 裡的範例命令再補上更完整的 CI / 部署範例，或直接幫你在伺服器上測試，回覆我想要的選項即可。

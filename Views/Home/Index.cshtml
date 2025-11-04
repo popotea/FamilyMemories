@@ -1,7 +1,22 @@
 ﻿@model FamilyMemories.Models.ViewModels.Home.IndexViewModel
+
 @{
     ViewData["Title"] = "當我們彤再一起";
-    Layout = null; 
+    Layout = null;
+    var photosJson = System.Text.Json.JsonSerializer.Serialize(
+        Model.Photos.Select(p => new {
+            id = p.Id,
+            imageUrl = p.ImageUrl,
+            member = p.Member,
+            date = p.Date,
+            title = p.Title,
+            description = p.Description,
+            userId = p.UserId
+        })
+    );
+    var isAuthenticated = User?.Identity?.IsAuthenticated == true ? "true" : "false";
+    var isAdmin = (User?.Identity?.IsAuthenticated == true && User.IsInRole("Admin")) ? "true" : "false";
+    var currentUserId = Model.CurrentUserId ?? string.Empty;
 }
 
 <!DOCTYPE html>
@@ -97,11 +112,6 @@
     </style>
 </head>
 <body>
- <!-- 開發用：快速登入連結（暫時，之後可移除） -->
- <div style="position:fixed; bottom:1rem; right:1rem; z-index:1200;">
- <a href="/Identity/Account/Login" style="display:inline-block; padding:0.5rem0.75rem; background:#ffc107; color:#000; border-radius:0.5rem; box-shadow:04px12px rgba(0,0,0,0.12); text-decoration:none; font-weight:600;">開發：登入</a>
- </div>
-
  <!-- 主題切換（明亮/黑暗） -->
     <button class="theme-toggle" id="themeToggle" title="切換主題" aria-label="切換主題">
         <!-- 預設圖示會由 JS 依主題切換 -->
@@ -199,8 +209,11 @@
                     <svg class="icon-lg heart-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
                     </svg>
-                    <!-- 編輯按鈕：始終渲染，但由 JavaScript 控制顯示 -->
-                    <button class="btn btn-primary" id="modalEditBtn" title="編輯" style="margin-left:auto; display:none;">編輯</button>
+                    <!-- 編輯按鈕：只有登入使用者才渲染 -->
+                    @if (User?.Identity?.IsAuthenticated == true)
+                    {
+                        <button class="btn btn-primary" id="modalEditBtn" title="編輯" style="margin-left:auto; display:none;">編輯</button>
+                    }
                 </div>
             </div>
         </div>
@@ -263,7 +276,11 @@
                     </div>
                     <div class="form-group">
                         <label for="addImage">圖片</label>
-                        <input type="file" id="addImage" class="form-control" accept="image/*" required>
+                        <div id="uploadDropZone" class="upload-drop-zone">
+                            <span id="uploadDropText">拖曳圖片到此或點擊選擇</span>
+                            <input type="file" id="addImage" class="form-control upload-input" accept="image/*" required style="display:none;">
+                            <img id="addPreview" src="" alt="預覽" style="display:none;max-width:100%;max-height:200px;margin-top:1rem;border-radius:0.5rem;box-shadow:0 2px 8px rgba(0,0,0,0.12);">
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="addDate">日期</label>
@@ -271,16 +288,54 @@
                     </div>
                     <button type="submit" class="btn btn-primary">新增</button>
                 </form>
+                <div id="addProgress" style="display:none;margin-top:1rem;">
+                    <div class="progress" style="height:8px;background:#eee;border-radius:4px;">
+                        <div class="progress-bar" id="addProgressBar" style="width:0%;height:8px;background:#007bff;border-radius:4px;"></div>
+                    </div>
+                    <span id="addProgressText" style="font-size:0.9rem;color:#888;margin-left:0.5rem;"></span>
+                </div>
             </div>
         </div>
     }
 
+    <!-- Toast 訊息 -->
+    <div id="toast" style="position:fixed;top:2rem;right:2rem;z-index:9999;display:none;padding:1rem 2rem;background:#222;color:#fff;border-radius:0.5rem;box-shadow:0 2px 8px rgba(0,0,0,0.18);font-size:1.1rem;opacity:0.95;transition:opacity 0.3s;">
+        <span id="toastMsg"></span>
+    </div>
+
+    <style>
+        /* 上傳區美化 */
+        .upload-drop-zone {
+            border: 2px dashed #aaa;
+            border-radius: 0.5rem;
+            padding: 2rem 1rem;
+            text-align: center;
+            background: var(--bg);
+            color: var(--muted);
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .upload-drop-zone.dragover {
+            border-color: #007bff;
+            background: rgba(0,123,255,0.08);
+        }
+        .upload-drop-zone:hover {
+            border-color: #007bff;
+        }
+        .upload-input {
+            display: none;
+        }
+        #addPreview {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        }
+    </style>
+
     <!-- 注入資料到 window 物件供 JS 使用 -->
     <script>
-        window.galleryPhotos = @Html.Raw(Json.Serialize(Model.Photos));
-        window.isAuthenticated = @((User?.Identity?.IsAuthenticated == true).ToString().ToLower());
-        window.isAdmin = @((User?.Identity?.IsAuthenticated == true && User.IsInRole("Admin")).ToString().ToLower());
-        window.currentUserId = "@(Model.CurrentUserId ?? string.Empty)";
+        window.galleryPhotos = @Html.Raw(photosJson);
+        window.isAuthenticated = '@isAuthenticated';
+        window.isAdmin = '@isAdmin';
+        window.currentUserId = '@currentUserId';
     </script>
 
     <!-- 引用外部 JS -->

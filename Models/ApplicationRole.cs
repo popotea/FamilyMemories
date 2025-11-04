@@ -8,7 +8,7 @@ namespace FamilyMemories.Models
     public class ApplicationRole : IdentityRole
     {
     public string? Description { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         /// <summary>
         /// 角色擁有的權限

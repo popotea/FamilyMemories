@@ -7,7 +7,9 @@
 	height: 100vh;
 	width: 220px;
 	z-index: 1050;
-	overflow-y: auto;
+	/* 不要在側邊欄啟用可捲動行為，避免滑鼠滾輪或拖曳造成側邊欄滾動 */
+	overflow: hidden;
+	overscroll-behavior: contain;
 }
 
 .sidebar {

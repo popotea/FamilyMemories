@@ -13,6 +13,9 @@
 }
 
 <h2>使用者權限管理</h2>
+<div class="mb-3">
+    <a asp-action="Create" class="btn btn-success">新增使用者</a>
+</div>
 <table class="table table-striped">
     <thead>
         <tr>
@@ -33,6 +36,13 @@
             <td>@user.UserPermissions.Count</td>
             <td>
                 <a asp-action="EditPermissions" asp-route-id="@user.Id" class="btn btn-primary btn-sm">編輯權限</a>
+                @if (User.Identity?.Name != user.UserName)
+                {
+                    <form asp-action="Delete" method="post" class="d-inline">
+                        <input type="hidden" name="id" value="@user.Id" />
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('確定要刪除使用者 "@user.UserName" 嗎？');">刪除</button>
+                    </form>
+                }
             </td>
         </tr>
     }

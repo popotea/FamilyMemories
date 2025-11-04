@@ -1,0 +1,110 @@
+@model FamilyMemories.Models.ViewModels.Admin.EditMemoryViewModel
+@{
+    ViewData["Title"] = "編輯回憶";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">編輯回憶</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-end">
+                    <li class="breadcrumb-item"><a href="/Admin">首頁</a></li>
+                    <li class="breadcrumb-item"><a href="/Admin/Admin/Memories">回憶管理</a></li>
+                    <li class="breadcrumb-item active">編輯</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">編輯回憶資訊</h3>
+                    </div>
+                    <form asp-action="EditMemory" method="post" enctype="multipart/form-data">
+                        <div class="card-body">
+                            <input type="hidden" asp-for="Id" />
+
+                            <div class="form-group">
+                                <label asp-for="Title">標題</label>
+                                <input type="text" class="form-control" asp-for="Title" required>
+                                <span asp-validation-for="Title" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="Description">描述</label>
+                                <textarea class="form-control" rows="4" asp-for="Description" required></textarea>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="Date">日期</label>
+                                <input type="date" class="form-control" asp-for="Date" required>
+                                <span asp-validation-for="Date" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label>目前圖片</label>
+                                <div class="mb-2">
+                                    @{
+                                        var r2Url = "https://c7d8f23f77d114bcc5e0b5c88c473255.r2.cloudflarestorage.com";
+                                        var r2Bucket = "picture";
+                                    }
+                                    @if (!string.IsNullOrEmpty(Model.ImagePath))
+                                    {
+                                        <img src="@(Model.ImagePath.StartsWith("http", StringComparison.OrdinalIgnoreCase) ? Model.ImagePath : $"{r2Url}/{r2Bucket}/{Model.ImagePath}")" alt="目前圖片" style="max-width: 200px; max-height: 200px; object-fit: cover; border: 1px solid #ddd; border-radius: 4px;">
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">圖片不存在</span>
+                                    }
+                                </div>
+                                <small class="text-muted">目前圖片將保持不變。如需更換圖片，請使用前端介面。</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label>使用者</label>
+                                <input type="text" class="form-control" value="@Model.UserName" readonly>
+                                <small class="text-muted">無法修改所屬使用者</small>
+                            </div>
+                        </div>
+
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary">儲存變更</button>
+                            <a href="/Admin/Admin/Memories" class="btn btn-secondary">取消</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // 表單驗證
+        (function () {
+            'use strict';
+            window.addEventListener('load', function () {
+                var forms = document.getElementsByClassName('needs-validation');
+                var validation = Array.prototype.filter.call(forms, function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+    </script>
+}

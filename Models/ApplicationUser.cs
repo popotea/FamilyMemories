@@ -13,7 +13,7 @@ namespace FamilyMemories.Models
     public string? FullName { get; set; }
         public DateTime? BirthDate { get; set; }
     public string? AvatarPath { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public bool IsActive { get; set; } = true; // 使用者是否啟用
 
     public virtual ICollection<Memory>? Memories { get; set; }
